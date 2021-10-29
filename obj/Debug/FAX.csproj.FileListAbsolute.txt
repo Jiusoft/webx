@@ -1,0 +1,10 @@
+C:\Users\Orlando Huang\source\repos\FAX\FAX\bin\Debug\FAX.exe.config
+C:\Users\Orlando Huang\source\repos\FAX\FAX\bin\Debug\FAX.exe
+C:\Users\Orlando Huang\source\repos\FAX\FAX\bin\Debug\FAX.pdb
+C:\Users\Orlando Huang\source\repos\FAX\FAX\obj\Debug\FAX.csproj.AssemblyReference.cache
+C:\Users\Orlando Huang\source\repos\FAX\FAX\obj\Debug\FAX.FAX.resources
+C:\Users\Orlando Huang\source\repos\FAX\FAX\obj\Debug\FAX.Properties.Resources.resources
+C:\Users\Orlando Huang\source\repos\FAX\FAX\obj\Debug\FAX.csproj.GenerateResource.cache
+C:\Users\Orlando Huang\source\repos\FAX\FAX\obj\Debug\FAX.csproj.CoreCompileInputs.cache
+C:\Users\Orlando Huang\source\repos\FAX\FAX\obj\Debug\FAX.exe
+C:\Users\Orlando Huang\source\repos\FAX\FAX\obj\Debug\FAX.pdb
