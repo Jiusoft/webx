@@ -1,6 +1,5 @@
 # Importing Libraries This Browser Needs
 import sys
-import os
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import *
@@ -109,7 +108,7 @@ class MainWindow(QMainWindow):
         self.close()
 
     def newwin(self):
-        os.startfile('FAX.exe')
+        MainWindow()
 
     def about(self):
         aboutfax = QMessageBox()
