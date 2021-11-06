@@ -5,14 +5,28 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtGui import QIcon
 
+
 # Setting Up This Browser
+class WebEnginePage(QWebEnginePage):
+    def createWindow(self, _type):
+        page = WebEnginePage(self)
+        page.urlChanged.connect(self.on_url_changed)
+        return page
+
+    @pyqtSlot(QUrl)
+    def on_url_changed(self, url):
+        page = self.sender()
+        self.setUrl(url)
+        page.deleteLater()
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
-        self.setMinimumSize(QSize(480,360))
+        self.setMinimumSize(QSize(480, 360))
         self.showMaximized()
 
-    # Tabs
+        # Tabs
         self.tabs = QTabWidget()
         self.tabs.setDocumentMode(True)
         self.tabs.tabBarDoubleClicked.connect(self.openatab)
@@ -21,7 +35,7 @@ class MainWindow(QMainWindow):
         self.tabs.tabCloseRequested.connect(self.closetab)
         self.setCentralWidget(self.tabs)
 
-    # Navigation Bar
+        # Navigation Bar
         navbar = QToolBar()
         self.addToolBar(navbar)
         navbar.setContextMenuPolicy(Qt.PreventContextMenu)
@@ -41,9 +55,9 @@ class MainWindow(QMainWindow):
         reloadbtn = QAction(QIcon('reload.png'), 'Reload', self)
         reloadbtn.triggered.connect(lambda: self.tabs.currentWidget().reload())
         navbar.addAction(reloadbtn)
-        
+
         # Adding a space between the reload button and URL Bar
-        Separatorlabel =  QLabel()
+        Separatorlabel = QLabel()
         Separatorlabel.setText(" ")
         navbar.addWidget(Separatorlabel)
 
@@ -63,17 +77,16 @@ class MainWindow(QMainWindow):
         self.searchbox.returnPressed.connect(self.doasearch)
         navbar.addWidget(self.searchbox)
 
+        # Creating First Tab
+        self.newtab()
 
-    # Creating First Tab
-        self.newtab(QUrl('https://www.duckduckgo.com'))
-
-    # Show Everything
+        # Show Everything
         self.show()
 
-    # Setting the Application icon
+        # Setting the Application icon
         self.setWindowIcon(QIcon('FAX.png'))
 
-    # Menubar
+        # Menubar
         # New Window
         newwinAction = QAction('&New Window', self)
         newwinAction.setShortcut('Ctrl+Shift+N')
@@ -120,18 +133,20 @@ class MainWindow(QMainWindow):
         aboutfax.setWindowIcon(QIcon('FAX.png'))
         x = aboutfax.exec_()
 
-    def newtab(self, qurl = None, label ="about:blank"):
+    def newtab(self, qurl=None, label="about:blank"):
         if qurl is None:
             qurl = QUrl('https://www.duckduckgo.com')
         browser = QWebEngineView()
+        page = WebEnginePage(browser)
+        browser.setPage(page)
         browser.setUrl(qurl)
         browser.setContextMenuPolicy(Qt.PreventContextMenu)
         i = self.tabs.addTab(browser, label)
         self.tabs.setCurrentIndex(i)
-        browser.urlChanged.connect(lambda qurl, browser = browser:
-                                self.updateurl(qurl, browser))
-        browser.loadFinished.connect(lambda _, i = i, browser = browser:
-                                    self.tabs.setTabText(i, browser.page().title()))
+        browser.urlChanged.connect(lambda qurl, browser=browser:
+                                   self.updateurl(qurl, browser))
+        browser.loadFinished.connect(lambda _, i=i, browser=browser:
+                                     self.tabs.setTabText(i, browser.page().title()))
 
     def openatab(self, i):
         if i == -1:
@@ -161,10 +176,11 @@ class MainWindow(QMainWindow):
             url.setScheme("https")
         self.tabs.currentWidget().setUrl(url)
 
-    def updateurl(self, url, browser = None):
+    def updateurl(self, url, browser=None):
         self.urlbar.setText(url.toString())
         if browser != self.tabs.currentWidget():
             return
+
 
 # Executing The Browser
 app = QApplication(sys.argv)
