@@ -15,9 +15,7 @@ class WebEnginePage(QWebEnginePage):
 
     @pyqtSlot(QUrl)
     def on_url_changed(self, url):
-        page = self.sender()
-        self.setUrl(url)
-        page.deleteLater()
+        window.newtab(qurl=url)
 
 
 class MainWindow(QMainWindow):
