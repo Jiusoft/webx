@@ -7,7 +7,7 @@ A lightweight webbrowser written in python. (currently under development)
 ### Jiusoft:
  - Github: @[Jiusoft](https://github.com/jiusoft)
  - Discord: Orlando Huang#7953
-### Jothin-kumar:
+### [Jothin-kumar](https://jothin-kumar.github.io):
  - Github: [@Jothin-kumar](https://github.com/jothin-kumar)
  - Discord: jothin-kumar#1075
 ### Omar:
