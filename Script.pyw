@@ -4,6 +4,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QFocusEvent as focus
 
 # Setting Up This Browser
 class WebEnginePage(QWebEnginePage):
@@ -127,7 +128,8 @@ class MainWindow(QMainWindow):
         keyword = self.searchbox.text()
         url = QUrl("https://www.duckduckgo.com/?q=" + keyword)
         self.tabs.currentWidget().setUrl(url)
-        self.searchbox.setText("")
+        self.searchbox.clear()
+        browser.setFocus()
 
     def exit(self):
         self.close()
@@ -148,6 +150,7 @@ class MainWindow(QMainWindow):
     def newtab(self, *args, qurl=None, label="about:blank"):
         if qurl is None:
             qurl = QUrl('https://www.duckduckgo.com')
+        global browser
         browser = QWebEngineView()
         page = WebEnginePage(browser)
         browser.setPage(page)
@@ -186,6 +189,7 @@ class MainWindow(QMainWindow):
         if url.scheme() == "http":
             url.setScheme("https")
         self.tabs.currentWidget().setUrl(url)
+        browser.setFocus()
 
     def updateurl(self, url, browser=None):
         self.urlbar.setText(url.toString())
