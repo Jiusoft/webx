@@ -5,7 +5,6 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtGui import QIcon
 
-
 # Setting Up This Browser
 class WebEnginePage(QWebEnginePage):
     def createWindow(self, _type):
@@ -22,12 +21,12 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setMinimumSize(QSize(480, 360))
-        self.showMaximized()
+        self.resize(QSize(1200, 800))
 
         # Tabs
         self.tabs = QTabWidget()
         self.tabs.setDocumentMode(True)
-        self.tabs.tabBarDoubleClicked.connect(self.openatab)
+        self.tabs.tabBarDoubleClicked.connect(self.maximize)
         self.tabs.currentChanged.connect(self.tabchanged)
         self.tabs.setTabsClosable(True)
         self.tabs.tabCloseRequested.connect(self.closetab)
@@ -73,7 +72,16 @@ class MainWindow(QMainWindow):
         navbar.addWidget(Searchlabel)
         self.searchbox = QLineEdit()
         self.searchbox.returnPressed.connect(self.doasearch)
+        self.searchbox.setFixedWidth(300)
         navbar.addWidget(self.searchbox)
+
+        # Adding a separator
+        navbar.addSeparator()
+
+        # Adding a new tab button
+        self.newtabButton = QAction("New Tab", self)
+        self.newtabButton.triggered.connect(self.newtab)
+        navbar.addAction(self.newtabButton)
 
         # Creating First Tab
         self.newtab()
@@ -109,6 +117,12 @@ class MainWindow(QMainWindow):
         helpMenu.addAction(aboutAction)
 
     # Defining things
+    def maximize(self):
+        if self.isMaximized():
+            self.showNormal()
+        else:
+            self.showMaximized()
+
     def doasearch(self):
         keyword = self.searchbox.text()
         url = QUrl("https://www.duckduckgo.com/?q=" + keyword)
@@ -131,14 +145,13 @@ class MainWindow(QMainWindow):
         aboutfax.setWindowIcon(QIcon('FAX.png'))
         x = aboutfax.exec_()
 
-    def newtab(self, qurl=None, label="about:blank"):
+    def newtab(self, *args, qurl=None, label="about:blank"):
         if qurl is None:
             qurl = QUrl('https://www.duckduckgo.com')
         browser = QWebEngineView()
         page = WebEnginePage(browser)
         browser.setPage(page)
         browser.setUrl(qurl)
-        browser.setContextMenuPolicy(Qt.PreventContextMenu)
         i = self.tabs.addTab(browser, label)
         self.tabs.setCurrentIndex(i)
         browser.urlChanged.connect(lambda qurl, browser=browser:
