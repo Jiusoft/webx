@@ -1,3 +1,6 @@
+"""
+Original repository link: https://github.com/Jiusoft/fax-browser
+"""
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import *
