@@ -5,7 +5,6 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtGui import QIcon
 
-
 # Setting Up This Browser
 class WebEnginePage(QWebEnginePage):
     def createWindow(self, _type):
@@ -15,19 +14,26 @@ class WebEnginePage(QWebEnginePage):
 
     @pyqtSlot(QUrl)
     def on_url_changed(self, url):
-        window.newtab(qurl=url)
+        url2str = url.toString()
+        notaddslash = url2str.endswith("/" or ".html" or ".htm" or ".shtml")
+        if not notaddslash == True:
+            url = QUrl(url2str + "/")
+            window.newtab(qurl=url)
+        else:
+            window.newtab(qurl=url)
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setMinimumSize(QSize(480, 360))
-        self.showMaximized()
+        self.resize(QSize(1200, 800))
+        self.browsercontextmenu = QMenu()
 
         # Tabs
         self.tabs = QTabWidget()
         self.tabs.setDocumentMode(True)
-        self.tabs.tabBarDoubleClicked.connect(self.openatab)
+        self.tabs.tabBarDoubleClicked.connect(self.maximize)
         self.tabs.currentChanged.connect(self.tabchanged)
         self.tabs.setTabsClosable(True)
         self.tabs.tabCloseRequested.connect(self.closetab)
@@ -73,7 +79,16 @@ class MainWindow(QMainWindow):
         navbar.addWidget(Searchlabel)
         self.searchbox = QLineEdit()
         self.searchbox.returnPressed.connect(self.doasearch)
+        self.searchbox.setFixedWidth(300)
         navbar.addWidget(self.searchbox)
+
+        # Adding a separator
+        navbar.addSeparator()
+
+        # Adding a new tab button
+        self.newtabButton = QAction("New Tab", self)
+        self.newtabButton.triggered.connect(self.newtab)
+        navbar.addAction(self.newtabButton)
 
         # Creating First Tab
         self.newtab()
@@ -85,6 +100,11 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon('FAX.png'))
 
         # Menubar
+        # Open HTML file
+        openfile = QAction('&Open', self)
+        openfile.setShortcut('Ctrl+O')
+        openfile.triggered.connect(self.openfile)
+
         # New Window
         newwinAction = QAction('&New Window', self)
         newwinAction.setShortcut('Ctrl+Shift+N')
@@ -103,17 +123,35 @@ class MainWindow(QMainWindow):
         # Seting Up Menubar
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('&File')
+        fileMenu.addAction(openfile)
         fileMenu.addAction(newwinAction)
         fileMenu.addAction(exitAction)
         helpMenu = menubar.addMenu('&Help')
         helpMenu.addAction(aboutAction)
 
     # Defining things
+    def openfile(self):
+        filepath = QFileDialog.getOpenFileName(None, "Open File", "", "HTML Files (*.htm, *.html)")
+        filepath2str = str(filepath)
+        filepath2str = filepath2str[2:-32]
+        filepath2str = "file:" + filepath2str
+        self.newtab(qurl=QUrl(filepath2str))
+
+    def showcontextmenu(self):
+        self.browsercontextmenu.show()
+
+    def maximize(self):
+        if self.isMaximized():
+            self.showNormal()
+        else:
+            self.showMaximized()
+
     def doasearch(self):
         keyword = self.searchbox.text()
         url = QUrl("https://www.duckduckgo.com/?q=" + keyword)
         self.tabs.currentWidget().setUrl(url)
-        self.searchbox.setText("")
+        self.searchbox.clear()
+        browser.setFocus()
 
     def exit(self):
         self.close()
@@ -133,15 +171,17 @@ class MainWindow(QMainWindow):
 
     def download(self, item):  # QWebEngineDownloadItem
         item.accept()
-
-    def newtab(self, qurl=None, label="about:blank"):
+    
+    def newtab(self, *args, qurl=None, label="about:blank"):
         if qurl is None:
             qurl = QUrl('https://www.duckduckgo.com')
+        global browser
         browser = QWebEngineView()
+        browser.setContextMenuPolicy(Qt.NoContextMenu)
+        browser.customContextMenuRequested.connect(self.showcontextmenu)
         page = WebEnginePage(browser)
         browser.setPage(page)
         browser.setUrl(qurl)
-        browser.setContextMenuPolicy(Qt.PreventContextMenu)
         i = self.tabs.addTab(browser, label)
         self.tabs.setCurrentIndex(i)
         browser.urlChanged.connect(lambda qurl, browser=browser:
@@ -177,6 +217,7 @@ class MainWindow(QMainWindow):
         if url.scheme() == "http":
             url.setScheme("https")
         self.tabs.currentWidget().setUrl(url)
+        browser.setFocus()
 
     def updateurl(self, url, browser=None):
         self.urlbar.setText(url.toString())
