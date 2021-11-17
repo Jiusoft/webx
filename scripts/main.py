@@ -33,7 +33,6 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
         self.setMinimumSize(QSize(800, 600))
         self.resize(QSize(1200, 800))
-        self.browsercontextmenu = QMenu()
 
         # Tabs
         self.tabs = QTabWidget()
