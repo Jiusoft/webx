@@ -25,7 +25,7 @@ def main():
         def __init__(self):
             super(MainWindow, self).__init__()
             self.setMinimumSize(QSize(480, 360))
-            self.showMaximized()
+            self.setFixedSize(1200, 800)
 
             # Tabs
             self.tabs = QTabWidget()
