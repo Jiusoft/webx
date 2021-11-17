@@ -171,7 +171,7 @@ class MainWindow(QMainWindow):
 
 (c) The Jiusoft Team. All rights reserved.""")
         aboutfax.setIcon(QMessageBox.Information)
-        aboutfax.setWindowIcon(QIcon('FAX.png'))
+        aboutfax.setWindowIcon(QIcon('../img/FAX.png'))
         x = aboutfax.exec_()
 
     def newtab(self, *args, qurl=None, label="about:blank"):
