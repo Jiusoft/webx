@@ -40,17 +40,17 @@ class MainWindow(QMainWindow):
         navbar.setMovable(False)
 
         # Back Button
-        backbtn = QAction(QIcon('back.png'), 'Back', self)
+        backbtn = QAction(QIcon('img/back.png'), 'Back', self)
         backbtn.triggered.connect(lambda: self.tabs.currentWidget().back())
         navbar.addAction(backbtn)
 
         # Forward Button
-        forwardbtn = QAction(QIcon('forward.png'), 'Forward', self)
+        forwardbtn = QAction(QIcon('img/forward.png'), 'Forward', self)
         forwardbtn.triggered.connect(lambda: self.tabs.currentWidget().forward())
         navbar.addAction(forwardbtn)
 
         # Reload Button
-        reloadbtn = QAction(QIcon('reload.png'), 'Reload', self)
+        reloadbtn = QAction(QIcon('img/reload.png'), 'Reload', self)
         reloadbtn.triggered.connect(lambda: self.tabs.currentWidget().reload())
         navbar.addAction(reloadbtn)
 
@@ -82,7 +82,7 @@ class MainWindow(QMainWindow):
         self.show()
 
         # Setting the Application icon
-        self.setWindowIcon(QIcon('FAX.png'))
+        self.setWindowIcon(QIcon('img/FAX.png'))
 
         # Menubar
         # New Window
@@ -128,7 +128,7 @@ class MainWindow(QMainWindow):
 
 (c) The Jiusoft Team. All rights reserved.""")
         aboutfax.setIcon(QMessageBox.Information)
-        aboutfax.setWindowIcon(QIcon('FAX.png'))
+        aboutfax.setWindowIcon(QIcon('img/FAX.png'))
         x = aboutfax.exec_()
 
     def download(self, item):  # QWebEngineDownloadItem

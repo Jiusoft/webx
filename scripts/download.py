@@ -1,0 +1,3 @@
+def download_file(item):
+    item.accept()
+# Enhancements coming soon...
