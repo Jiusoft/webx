@@ -31,7 +31,7 @@ class WebEnginePage(QWebEnginePage):
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
-        self.setMinimumSize(QSize(480, 360))
+        self.setMinimumSize(QSize(800, 600))
         self.resize(QSize(1200, 800))
         self.browsercontextmenu = QMenu()
 
