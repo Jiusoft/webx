@@ -4,7 +4,6 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtGui import QIcon
-from PyQt5.QtGui import QFocusEvent as focus
 
 # Setting Up This Browser
 class WebEnginePage(QWebEnginePage):
@@ -16,8 +15,8 @@ class WebEnginePage(QWebEnginePage):
     @pyqtSlot(QUrl)
     def on_url_changed(self, url):
         url2str = url.toString()
-        addslash = url2str.endswith("/" or ".html")
-        if not addslash == True:
+        notaddslash = url2str.endswith("/" or ".html" or ".htm" or ".shtml")
+        if not notaddslash == True:
             url = QUrl(url2str + "/")
             window.newtab(qurl=url)
         else:
@@ -29,6 +28,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
         self.setMinimumSize(QSize(480, 360))
         self.resize(QSize(1200, 800))
+        self.browsercontextmenu = QMenu()
 
         # Tabs
         self.tabs = QTabWidget()
@@ -124,6 +124,9 @@ class MainWindow(QMainWindow):
         helpMenu.addAction(aboutAction)
 
     # Defining things
+    def showcontextmenu(self):
+        self.browsercontextmenu.show()
+
     def maximize(self):
         if self.isMaximized():
             self.showNormal()
@@ -158,6 +161,8 @@ class MainWindow(QMainWindow):
             qurl = QUrl('https://www.duckduckgo.com')
         global browser
         browser = QWebEngineView()
+        browser.setContextMenuPolicy(Qt.NoContextMenu)
+        browser.customContextMenuRequested.connect(self.showcontextmenu)
         page = WebEnginePage(browser)
         browser.setPage(page)
         browser.setUrl(qurl)
