@@ -100,6 +100,11 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon('FAX.png'))
 
         # Menubar
+        # Open HTML file
+        openfile = QAction('&Open', self)
+        openfile.setShortcut('Ctrl+O')
+        openfile.triggered.connect(self.openfile)
+
         # New Window
         newwinAction = QAction('&New Window', self)
         newwinAction.setShortcut('Ctrl+Shift+N')
@@ -118,12 +123,20 @@ class MainWindow(QMainWindow):
         # Seting Up Menubar
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('&File')
+        fileMenu.addAction(openfile)
         fileMenu.addAction(newwinAction)
         fileMenu.addAction(exitAction)
         helpMenu = menubar.addMenu('&Help')
         helpMenu.addAction(aboutAction)
 
     # Defining things
+    def openfile(self):
+        filepath = QFileDialog.getOpenFileName(None, "Open File", "", "HTML Files (*.htm, *.html)")
+        filepath2str = str(filepath)
+        filepath2str = filepath2str[2:-32]
+        filepath2str = "file:" + filepath2str
+        self.newtab(qurl=QUrl(filepath2str))
+
     def showcontextmenu(self):
         self.browsercontextmenu.show()
 
