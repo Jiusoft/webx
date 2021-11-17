@@ -169,6 +169,9 @@ class MainWindow(QMainWindow):
         aboutfax.setWindowIcon(QIcon('FAX.png'))
         x = aboutfax.exec_()
 
+    def download(self, item):  # QWebEngineDownloadItem
+        item.accept()
+    
     def newtab(self, *args, qurl=None, label="about:blank"):
         if qurl is None:
             qurl = QUrl('https://www.duckduckgo.com')
@@ -185,6 +188,7 @@ class MainWindow(QMainWindow):
                                    self.updateurl(qurl, browser))
         browser.loadFinished.connect(lambda _, i=i, browser=browser:
                                      self.tabs.setTabText(i, browser.page().title()))
+        browser.page().profile().downloadRequested.connect(self.download)
 
     def openatab(self, i):
         if i == -1:
