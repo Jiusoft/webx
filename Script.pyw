@@ -15,7 +15,13 @@ class WebEnginePage(QWebEnginePage):
 
     @pyqtSlot(QUrl)
     def on_url_changed(self, url):
-        window.newtab(qurl=url)
+        url2str = url.toString()
+        addslash = url2str.endswith("/" or ".html")
+        if not addslash == True:
+            url = QUrl(url2str + "/")
+            window.newtab(qurl=url)
+        else:
+            window.newtab(qurl=url)
 
 
 class MainWindow(QMainWindow):
