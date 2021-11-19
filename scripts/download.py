@@ -7,7 +7,7 @@ import tkinter as tk
 def download_file(item):
     root = tk.Tk()
     filename = item.suggestedFileName()
-    root.wm_title(f'{filename} download - Jiusoft fax browser')
+    root.wm_title(f'{filename} download - FAX browser')
 
     def save():
         item.accept()
