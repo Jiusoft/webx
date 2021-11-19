@@ -5,7 +5,7 @@ A lightweight webbrowser written in python. (currently under development), **By 
 
 ## Feel free to contact:
 ### Orlando Huang:
- - Github: @[orlandohuang](https://github.com/orlandohuang)
+ - Github:  [@orlandohuang](https://github.com/orlandohuang)
  - Discord: Orlando Huang#7953
 ### [Jothin-kumar](https://jothin-kumar.github.io):
  - Github: [@Jothin-kumar](https://github.com/jothin-kumar)
