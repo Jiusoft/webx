@@ -1,6 +1,6 @@
 # FAX Browser - By [Jiusoft](https://github.com/jiusoft), [Jothin kumar](https://jothin-kumar.github.io/) and Omar
 ![Visitors count](https://visitor-badge.glitch.me/badge?page_id=jiusoft.fax-browser)  
-A lightweight webbrowser written in python. (currently under development)
+A lightweight webbrowser written in python. (currently under development), **By the way, the first version is released (maybe)**
 **Please leave a star if you like this repo :-)**
 
 ## Feel free to contact:
