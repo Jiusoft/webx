@@ -190,6 +190,21 @@ class MainWindow(QMainWindow):
         browser.loadFinished.connect(lambda _, i=i, browser=browser:
                                      self.tabs.setTabText(i, browser.page().title()))
         browser.page().profile().downloadRequested.connect(download_file)
+        browser.page().fullScreenRequested.connect(
+            lambda request, browser=browser: self.handle_fullscreen_requested(
+                request, browser
+            )
+        )
+        browser.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
+
+    def handle_fullscreen_requested(self, request, browser):
+        request.accept()
+        if request.toggleOn():
+            self.showFullScreen()
+            # TODO: Add code to hide other widgets.
+        else:
+            self.showNormal()
+            # TODO: Add code to show other widgets.
 
     def openatab(self, i):
         if i == -1:
