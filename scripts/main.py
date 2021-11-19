@@ -141,9 +141,6 @@ class MainWindow(QMainWindow):
         filepath2str = "file:" + filepath2str
         self.newtab(qurl=QUrl(filepath2str))
 
-    def showcontextmenu(self):
-        self.browsercontextmenu.show()
-
     def maximize(self):
         if self.isMaximized():
             self.showNormal()
@@ -179,7 +176,6 @@ class MainWindow(QMainWindow):
         global browser
         browser = QWebEngineView()
         browser.setContextMenuPolicy(Qt.NoContextMenu)
-        browser.customContextMenuRequested.connect(self.showcontextmenu)
         page = WebEnginePage(browser)
         browser.setPage(page)
         browser.setUrl(qurl)
