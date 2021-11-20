@@ -10,6 +10,9 @@ from PyQt5.QtGui import QIcon
 
 from download import download_file
 
+
+version = "1.0.0"
+
 # Setting Up This Browser
 class WebEnginePage(QWebEnginePage):
     def createWindow(self, _type):
@@ -191,6 +194,7 @@ class MainWindow(QMainWindow):
                 request, browser
             )
         )
+        browser.page().profile().setHttpUserAgent(f'FAX/{version}')
         browser.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
 
     def handle_fullscreen_requested(self, request, browser):
