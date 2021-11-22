@@ -93,7 +93,7 @@ class MainWindow(QMainWindow):
         navbar.addSeparator()
 
         # Adding a new tab button
-        self.newtabButton = QAction("New Tab", self)
+        self.newtabButton = QAction(QIcon('../img/newtab.png'), "New Tab", self)
         self.newtabButton.triggered.connect(self.newtab)
         navbar.addAction(self.newtabButton)
 
