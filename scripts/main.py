@@ -23,7 +23,7 @@ class WebEnginePage(QWebEnginePage):
     @pyqtSlot(QUrl)
     def on_url_changed(self, url):
         url2str = url.toString()
-        notaddslash = url2str.endswith("/" or ".html" or ".htm" or ".shtml")
+        notaddslash = url2str.endswith("/" or ".xml" or ".html" or ".htm" or ".shtml")
         if not notaddslash == True:
             url = QUrl(url2str + "/")
             window.newtab(qurl=url)
