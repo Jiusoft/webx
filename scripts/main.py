@@ -178,7 +178,7 @@ class MainWindow(QMainWindow):
             qurl = QUrl('https://www.duckduckgo.com')
         global browser
         browser = QWebEngineView()
-        browser.setContextMenuPolicy(Qt.NoContextMenu)
+        browser.setContextMenuPolicy(Qt.PreventContextMenu)
         page = WebEnginePage(browser)
         browser.setPage(page)
         browser.setUrl(qurl)
