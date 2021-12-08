@@ -47,6 +47,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.tabs)
 
         # Navigation Bar
+        global navbar
         navbar = QToolBar()
         self.addToolBar(navbar)
         navbar.setContextMenuPolicy(Qt.PreventContextMenu)
@@ -128,6 +129,7 @@ class MainWindow(QMainWindow):
         aboutAction.triggered.connect(self.about)
 
         # Seting Up Menubar
+        global menubar
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('&File')
         fileMenu.addAction(openfile)
@@ -201,9 +203,13 @@ class MainWindow(QMainWindow):
         request.accept()
         if request.toggleOn():
             self.showFullScreen()
+            menubar.hide()
+            navbar.hide()
             # TODO: Add code to hide other widgets.
         else:
             self.showNormal()
+            menubar.show()
+            navbar.show()
             # TODO: Add code to show other widgets.
 
     def openatab(self, i):
