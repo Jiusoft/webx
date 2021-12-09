@@ -7,11 +7,11 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtGui import QIcon
-
 from download import download_file
 
 
 version = "1.0.0"
+
 
 # Setting Up This Browser
 class WebEnginePage(QWebEnginePage):
