@@ -205,12 +205,12 @@ class MainWindow(QMainWindow):
             self.showFullScreen()
             menubar.hide()
             navbar.hide()
-            # TODO: Add code to hide other widgets.
+            self.tabs.tabBar().hide()
         else:
             self.showNormal()
             menubar.show()
             navbar.show()
-            # TODO: Add code to show other widgets.
+            self.tabs.tabBar().show()
 
     def openatab(self, i):
         if i == -1:
