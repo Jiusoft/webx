@@ -13,4 +13,4 @@ A lightweight webbrowser written in python. (currently under development), **By 
 ### Omar Moustafa:
  - Github: [@Omar8345](https://github.com/Omar8345)
  - Discord: expo 2020#4914
- - Email: [osedki@outlook.com]
+ - Email: [osedki@outlook.com](mailto:osedki@outlook.com)
