@@ -201,13 +201,20 @@ class MainWindow(QMainWindow):
 
     def handle_fullscreen_requested(self, request, browser):
         request.accept()
+        if self.isMaximized():
+            maximize = True
+        else:
+            maximize = False
         if request.toggleOn():
             self.showFullScreen()
             menubar.hide()
             navbar.hide()
             self.tabs.tabBar().hide()
         else:
-            self.showNormal()
+            if maximize:
+                self.showMaximized()
+            else:
+                self.showNormal()
             menubar.show()
             navbar.show()
             self.tabs.tabBar().show()
