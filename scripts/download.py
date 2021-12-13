@@ -6,6 +6,7 @@ import tkinter as tk
 
 def download_file(item):
     root = tk.Tk()
+    root.overrideredirect(True)
     filename = item.suggestedFileName()
     root.wm_title(f'{filename} download - FAX browser')
 
