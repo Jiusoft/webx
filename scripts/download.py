@@ -15,7 +15,7 @@ def download_file(item):
         root.destroy()
 
     tk.Label(master=root,
-             text=f'What would you like to do with {filename} ({item.totalBytes()} Bytes)').pack()
+             text=f'What would you like to do with {filename}').pack()
     tk.Button(master=root, text='Save', command=save).pack()
     tk.Button(master=root, text='Cancel', command=root.destroy).pack()
     root.mainloop()
