@@ -226,18 +226,12 @@ class MainWindow(QMainWindow):
     def tabchanged(self, i):
         qurl = self.tabs.currentWidget().url()
         self.updateurl(qurl, self.tabs.currentWidget())
-        self.updatetitle(self.tabs.currentWidget())
 
     def closetab(self, i):
         if self.tabs.count() < 2:
             self.tabs.currentWidget().setUrl(QUrl('https://www.duckduckgo.com'))
         else:
             self.tabs.removeTab(i)
-
-    def updatetitle(self, browser):
-        if browser != self.tabs.currentWidget():
-            return
-        title = self.tabs.currentWidget().page().title()
 
     def navigatetourl(self):
         url = QUrl(self.urlbar.text())
