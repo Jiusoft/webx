@@ -143,8 +143,8 @@ class MainWindow(QMainWindow):
         filepath = QFileDialog.getOpenFileName(None, "Open File", "", "HTML Files (*.htm, *.html)")
         filepath2str = str(filepath)
         filepath2str = filepath2str[2:-32]
-        filepath2str = "file:" + filepath2str
-        self.newtab(qurl=QUrl(filepath2str))
+        if not filepath2str == "":
+            self.newtab(qurl=QUrl(f"file:{filepath2str}"))
 
     def maximize(self):
         if self.isMaximized():
