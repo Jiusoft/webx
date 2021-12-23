@@ -3,6 +3,7 @@ Original repository link: https://github.com/Jiusoft/fax-browser
 """
 # Importing Libraries This Browser Needs
 import sys
+import platform
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import *
@@ -140,7 +141,10 @@ class MainWindow(QMainWindow):
 
     # Defining things
     def openfile(self):
-        filepath = QFileDialog.getOpenFileName(None, "Open File", "", "HTML Files (*.htm, *.html)")
+        if platform.system() == "Linux" or platform.system() == "Darwin":
+            filepath = QFileDialog.getOpenFileName(None, "Open File", "/", "HTML Files (*.htm, *.html)")
+        else:
+            filepath = QFileDialog.getOpenFileName(None, "Open File", "C:\\", "HTML Files (*.htm, *.html)")
         filepath2str = str(filepath)
         filepath2str = filepath2str[2:-32]
         if not filepath2str == "":
