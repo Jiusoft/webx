@@ -55,17 +55,17 @@ class MainWindow(QMainWindow):
         navbar.setMovable(False)
 
         # Back Button
-        backbtn = QAction(QIcon('../img/back.png'), 'Back', self)
+        backbtn = QAction(QIcon('img/back.png'), 'Back', self)
         backbtn.triggered.connect(lambda: self.tabs.currentWidget().back())
         navbar.addAction(backbtn)
 
         # Forward Button
-        forwardbtn = QAction(QIcon('../img/forward.png'), 'Forward', self)
+        forwardbtn = QAction(QIcon('img/forward.png'), 'Forward', self)
         forwardbtn.triggered.connect(lambda: self.tabs.currentWidget().forward())
         navbar.addAction(forwardbtn)
 
         # Reload Button
-        reloadbtn = QAction(QIcon('../img/reload.png'), 'Reload', self)
+        reloadbtn = QAction(QIcon('img/reload.png'), 'Reload', self)
         reloadbtn.triggered.connect(lambda: self.tabs.currentWidget().reload())
         navbar.addAction(reloadbtn)
 
@@ -95,7 +95,7 @@ class MainWindow(QMainWindow):
         navbar.addSeparator()
 
         # Adding a new tab button
-        self.newtabButton = QAction(QIcon('../img/newtab.png'), "New Tab", self)
+        self.newtabButton = QAction(QIcon('img/newtab.png'), "New Tab", self)
         self.newtabButton.triggered.connect(self.newtab)
         navbar.addAction(self.newtabButton)
 
@@ -106,7 +106,7 @@ class MainWindow(QMainWindow):
         self.show()
 
         # Setting the Application icon
-        self.setWindowIcon(QIcon('../img/FAX.png'))
+        self.setWindowIcon(QIcon('img/FAX.png'))
 
         # Menubar
         # Open HTML file
@@ -176,7 +176,7 @@ class MainWindow(QMainWindow):
 
 (c) The Jiusoft Team. All rights reserved.""")
         aboutfax.setIcon(QMessageBox.Information)
-        aboutfax.setWindowIcon(QIcon('../img/FAX.png'))
+        aboutfax.setWindowIcon(QIcon('img/FAX.png'))
         x = aboutfax.exec_()
 
     def newtab(self, *args, qurl=None, label="about:blank"):
