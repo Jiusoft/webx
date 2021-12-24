@@ -14,6 +14,8 @@ if exists('version'):
         version = f.read()
 else:
     version = '1.0.0'
+    with open('version', 'w') as f:
+        f.write(version)
 
 root = tk.Tk()
 root.overrideredirect(True)
