@@ -1,3 +1,7 @@
+"""
+Original repository link: https://github.com/Jiusoft/fax-browser
+Author: Jothin kumar (https://jothin-kumar.github.io)
+"""
 import tkinter as tk
 from time import sleep
 from threading import Thread
