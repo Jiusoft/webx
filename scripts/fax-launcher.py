@@ -41,7 +41,7 @@ def check_for_updates():
     latest_version = get('https://cdn.jiu-soft.com/fax-browser/latest-version.txt').text.strip('\n')
     now = datetime.now()
     log(f'[{now.year}:{now.month}:{now.day}:{now.hour}:{now.minute}:{now.second}]: lv - {latest_version}')
-    return latest_version == version
+    return latest_version != version
 
 
 Thread(target=check_for_updates).start()
