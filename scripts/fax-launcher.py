@@ -17,8 +17,6 @@ if exists('version'):
         version = f.read()
 else:
     version = ''
-    with open('version', 'w') as f:
-        f.write(version)
 
 linux = platform.system() == 'Linux'
 windows = platform.system() == 'Windows'
