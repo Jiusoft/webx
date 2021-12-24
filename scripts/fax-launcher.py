@@ -44,5 +44,11 @@ def check_for_updates():
     return latest_version != version
 
 
+def download_update():
+    in_progress_msg('Downloading update')
+    with open('update_temp.zip', 'wb') as file:
+        file.write(get('https://cdn.jiu-soft.com/fax-browser/fax-browser-files.zip', allow_redirects=True).content)
+
+
 Thread(target=check_for_updates).start()
 root.mainloop()
