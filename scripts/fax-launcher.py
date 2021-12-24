@@ -7,8 +7,13 @@ from time import sleep
 from threading import Thread
 from requests import get
 from datetime import datetime
+from os.path import exists
 
-version = '1.0.0'
+if exists('version'):
+    with open('version', 'r') as f:
+        version = f.read()
+else:
+    version = '1.0.0'
 
 root = tk.Tk()
 root.overrideredirect(True)
