@@ -172,9 +172,7 @@ class MainWindow(QMainWindow):
     def about(self):
         aboutfax = QMessageBox()
         aboutfax.setWindowTitle("About")
-        aboutfax.setText("""FAX Version 1.001.000
-
-(c) The Jiusoft Team. All rights reserved.""")
+        aboutfax.setText(f'FAX Version {version}\n\n(c) The Jiusoft Team. All rights reserved.')
         aboutfax.setIcon(QMessageBox.Information)
         aboutfax.setWindowIcon(QIcon('img/FAX.png'))
         x = aboutfax.exec_()
