@@ -3,3 +3,4 @@ PyQt5-sip
 PyQtWebEngine
 PyQt5-Qt5
 PyQtWebEngine-Qt5
+pillow
