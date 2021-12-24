@@ -76,7 +76,10 @@ def download_update(latest_version):
     in_progress_msg('Downloading update')
     log('Downloading update')
     with open('update_temp.zip', 'wb') as file:
-        file.write(get('https://cdn.jiu-soft.com/fax-browser/fax-browser-files.zip', allow_redirects=True).content)
+        if linux:
+            file.write(get('https://cdn.jiu-soft.com/fax-browser/fax-browser-files-linux.zip', allow_redirects=True).content)
+        elif windows:
+            file.write(get('https://cdn.jiu-soft.com/fax-browser/fax-browser-files-windows.zip', allow_redirects=True).content)
     fetch_launch_command()
     with open('version', 'w') as file:
         file.write(latest_version)
