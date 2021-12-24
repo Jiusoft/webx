@@ -17,8 +17,9 @@ progress_label.pack(side=tk.BOTTOM)
 
 
 def log(message):
+    now = datetime.now()
     with open('launcher-logs.txt', 'a+') as log_file:
-        log_file.write(f'{message}\n')
+        log_file.write(f'[{now.year}:{now.month}:{now.day}:{now.hour}:{now.minute}:{now.second}]: {message}\n')
 
 
 def in_progress_msg(msg):
@@ -32,14 +33,14 @@ def in_progress_msg(msg):
                 progress_label['text'] = msg
             else:
                 break
+
     Thread(target=command).start()
 
 
 def check_for_updates():
     in_progress_msg('Checking for updates')
     latest_version = get('https://cdn.jiu-soft.com/fax-browser/latest-version.txt').text.strip('\n')
-    now = datetime.now()
-    log(f'[{now.year}:{now.month}:{now.day}:{now.hour}:{now.minute}:{now.second}]: lv - {latest_version}')
+    log(f'lv - {latest_version}')
     return latest_version != version
 
 
