@@ -17,7 +17,7 @@ progress_label.pack(side=tk.BOTTOM)
 
 
 def log(message):
-    with open('logs.txt', 'a+') as log_file:
+    with open('launcher-logs.txt', 'a+') as log_file:
         log_file.write(f'{message}\n')
 
 
