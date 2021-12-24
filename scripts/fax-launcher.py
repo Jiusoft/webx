@@ -21,23 +21,22 @@ def log(message):
         log_file.write(f'{message}\n')
 
 
-def check_for_updates():
-    def progress_update_command():
-        progress_label['text'] = 'Checking for updates'
+def in_progress_msg(msg):
+    def command():
+        progress_label['text'] = msg
         while True:
             sleep(0.5)
-            if progress_label['text'] == 'Checking for updates':
-                progress_label['text'] = 'Checking for updates.'
-            elif progress_label['text'] == 'Checking for updates.':
-                progress_label['text'] = 'Checking for updates..'
-            elif progress_label['text'] == 'Checking for updates..':
-                progress_label['text'] = 'Checking for updates...'
-            elif progress_label['text'] == 'Checking for updates...':
-                progress_label['text'] = 'Checking for updates'
+            if progress_label['text'] in [msg, msg + '.', msg + '..']:
+                progress_label['text'] += '.'
+            elif progress_label['text'] == msg + '...':
+                progress_label['text'] = msg
             else:
                 break
+    Thread(target=command).start()
 
-    Thread(target=progress_update_command).start()
+
+def check_for_updates():
+    in_progress_msg('Checking for updates')
     latest_version = get('https://cdn.jiu-soft.com/fax-browser/latest-version.txt').text.strip('\n')
     now = datetime.now()
     log(f'[{now.year}:{now.month}:{now.day}:{now.hour}:{now.minute}:{now.second}]: lv - {latest_version}')
