@@ -101,7 +101,7 @@ def launch():
         if not exists('launch-command'):
             fetch_launch_command()
         with open('launch-command', 'r') as file:
-            system(file.read())
+            system(file.read().strip('\n'))
         log('Browser launched')
     except RuntimeError:
         log('RuntimeError in function launch')
