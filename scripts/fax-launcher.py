@@ -33,7 +33,7 @@ progress_label.pack(side=tk.BOTTOM)
 def log(message):
     now = datetime.now()
     with open('launcher-logs.txt', 'a+') as log_file:
-        log_file.write(f'[{now.year}:{now.month}:{now.day}:{now.hour}:{now.minute}:{now.second}]: {message}\n')
+        log_file.write(f'[{now.month}/{now.day} {now.year} {now.hour}:{now.minute}:{now.second}]: {message}\n')
 
 
 def in_progress_msg(msg):
