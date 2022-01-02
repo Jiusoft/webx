@@ -2,6 +2,7 @@
 ![Visitors count](https://visitor-badge.glitch.me/badge?page_id=jiusoft.fax-browser)
 <br>
 <img src="readme_img/fax.png" height="150" style="display:block; margin:auto;">
+
 <br>
 A lightweight webbrowser written in python. (currently under development).
 <br>
