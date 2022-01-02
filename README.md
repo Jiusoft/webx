@@ -1,8 +1,7 @@
 # FAX Browser - By [Orlando Huang](https://github.com/orlandohuang), [Jothin kumar](https://jothin-kumar.github.io/) and [Omar Moustafa](https://github.com/Omar8345)
 ![Visitors count](https://visitor-badge.glitch.me/badge?page_id=jiusoft.fax-browser)
 <br>
-<img src="readme_img/fax.png" height="150" style="display:block; margin:auto;">
-
+<img src="readme_img/FAX.png" height="150" style="display:block; margin:auto;">
 <br>
 A lightweight webbrowser written in python. (currently under development).
 <br>
