@@ -176,5 +176,7 @@ def main():
         showerror(
             'Error', f'An error occurred in function main: {e}\nPlease raise an issue on GitHub')
 
-Thread(target=main).start()
+t = Thread(target=main)
+t.setDaemon(True)
+t.start()
 root.mainloop()
