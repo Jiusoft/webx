@@ -2,7 +2,6 @@
 Original repository link: https://github.com/Jiusoft/fax-browser
 """
 # Importing Libraries This Browser Needs
-from history import *
 import sys
 import platform
 from PyQt5.QtCore import *
@@ -13,6 +12,8 @@ from download import download_file
 from datetime import datetime
 import os
 import sqlite3
+from history import compile_sqlte3_to_html_history
+from bookmark import compile_sqlte3_to_html_bookmark
 
 if os.name == 'nt':
     os.system("cls")
@@ -59,14 +60,21 @@ print("Thank you for using the Fax Browser!\n")
 # Setting Up This Browser
 
 try:
-    conn = sqlite3.connect("history/search_history.db")
-    c = conn.cursor()
-    c.execute("CREATE TABLE IF NOT EXISTS history(date text, time text, link text)")
-    conn.commit()
-    conn.close()
+    history_conn = sqlite3.connect("history/search_history.db")
+    history_c = history_conn.cursor()
+    history_c.execute(
+        "CREATE TABLE IF NOT EXISTS history(date date, time time, link text)")
+    history_conn.commit()
+    history_conn.close()
+
+    bookmark_conn = sqlite3.connect("bookmarks/bookmarks.db")
+    bookmark_c = bookmark_conn.cursor()
+    bookmark_c.execute("CREATE TABLE IF NOT EXISTS bookmark(date datetime, link text)")
+    bookmark_conn.commit()
+    bookmark_conn.close()
 except:
     print(
-        "Cannot access file \"search_history.db\"; most likely because of a wrong directory error.")
+        "Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
 
 version = "1.0.0"
 
@@ -106,11 +114,14 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.tabs)
 
         try:
-            self.conn = sqlite3.connect("history/search_history.db")
-            self.c = self.conn.cursor()
+            self.history_conn = sqlite3.connect("history/search_history.db")
+            self.history_c = self.history_conn.cursor()
+
+            self.bookmark_conn = sqlite3.connect("bookmarks/bookmarks.db")
+            self.bookmark_c = self.bookmark_conn.cursor()
         except:
             print(
-                "Cannot access file \"search_history.db\"; most likely because of a wrong directory error.")
+                "Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
 
         # Navigation Bar
         global navbar
@@ -165,17 +176,6 @@ class MainWindow(QMainWindow):
         self.newtabButton.triggered.connect(self.newtab)
         navbar.addAction(self.newtabButton)
 
-        # Adding a history button
-        self.historyButton = QAction(QIcon('img/history.png'), "History", self)
-        self.historyButton.triggered.connect(self.checkHistory)
-        navbar.addAction(self.historyButton)
-
-        # Adding a clear history Button
-        self.removeHistoryButton = QAction(
-            QIcon('img/trash.png'), "Remove All History", self)
-        self.removeHistoryButton.triggered.connect(self.removeHistory)
-        navbar.addAction(self.removeHistoryButton)
-
         # Creating First Tab
         self.newtab()
 
@@ -206,6 +206,31 @@ class MainWindow(QMainWindow):
         aboutAction.setShortcut('F1')
         aboutAction.triggered.connect(self.about)
 
+        # Bookmark
+        bookmarkAction = QAction("&Bookmark This Tab", self)
+        bookmarkAction.setShortcut('Ctrl+B')
+        bookmarkAction.triggered.connect(self.bookmark)
+
+        # See Bookmarks
+        openBookmarksAction = QAction("&Open Bookmarks", self)
+        openBookmarksAction.setShortcut('Ctrl+Shift+B')
+        openBookmarksAction.triggered.connect(self.openBookmarks)
+
+        # Clear Bookmarks
+        clearBookmarksAction = QAction("&Clear Bookmarks", self)
+        clearBookmarksAction.setShortcut('Ctrl+Shift+C')
+        clearBookmarksAction.triggered.connect(self.removeBookmarks)
+        
+        # History
+        historyAction = QAction("&Your Browsing History", self)
+        historyAction.setShortcut('Ctrl+H')
+        historyAction.triggered.connect(self.checkHistory)
+
+        # Clear History
+        clearHistoryAction = QAction("&Clear All History", self)
+        clearHistoryAction.setShortcut('Ctrl+Shift+H')
+        clearHistoryAction.triggered.connect(self.removeHistory)
+
         # Seting Up Menubar
         global menubar
         menubar = self.menuBar()
@@ -213,8 +238,18 @@ class MainWindow(QMainWindow):
         fileMenu.addAction(openfile)
         fileMenu.addAction(newwinAction)
         fileMenu.addAction(exitAction)
+        
         helpMenu = menubar.addMenu('&Help')
         helpMenu.addAction(aboutAction)
+        
+        bookmarkManagerMenu = menubar.addMenu('&Bookmark Manager')
+        bookmarkManagerMenu.addAction(bookmarkAction)
+        bookmarkManagerMenu.addAction(openBookmarksAction)
+        bookmarkManagerMenu.addAction(clearBookmarksAction)
+        
+        historyMenu = menubar.addMenu('&History')
+        historyMenu.addAction(historyAction)
+        historyMenu.addAction(clearHistoryAction)
 
     # Defining things
     def openfile(self):
@@ -244,7 +279,8 @@ class MainWindow(QMainWindow):
 
     def exit(self):
         self.close()
-        self.conn.close()
+        self.history_conn.close()
+        self.bookmark_conn.close()
 
     def newwin(self):
         MainWindow()
@@ -321,6 +357,8 @@ class MainWindow(QMainWindow):
         url = QUrl(self.urlbar.text())
         if self.urlbar.text() == "fax://history":
             url = QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html")
+        if self.urlbar.text() == "fax://bookmarks":
+            url = QUrl.fromLocalFile(f"{os.getcwd()}/bookmarks/bookmarks.html")
         if url.scheme() == "":
             url.setScheme("https")
         if url.scheme() == "http":
@@ -331,31 +369,39 @@ class MainWindow(QMainWindow):
     def updateurl(self, url, browser=None):
         now = datetime.now()
 
+        self.url = url
+
         if len(url.toString()) > 100:
             self.urlbar.setText(f"{url.toString()[:100]}...")
         else:
             self.urlbar.setText(url.toString())
 
-        if url.toString() != QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html").toString():
-            try:
-                if str(url.toString()) != "":
-                    self.c.execute(
-                        f"INSERT INTO history VALUES ('{now.month}/{now.day}/{now.year}', '{now.hour}:{now.minute}:{now.second}', '{str(url.toString())}')")
-                    self.conn.commit()
-                    compile_sqlte3_to_html()
-            except:
-                print(
-                    "Cannot access file \"search_history.db\"; most likely because of a wrong directory error.")
-        else:
+        if url.toString() != QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html").toString() and url.toString() != QUrl.fromLocalFile(f"{os.getcwd()}/bookmarks/bookmarks.html").toString():
+            if str(url.toString()) != "":
+                self.history_c.execute(
+                    f"INSERT INTO history VALUES ('{now.year}-{now.month}-{now.day}', '{now.hour}:{now.minute}:{now.second}', '{str(url.toString())}')")
+                self.history_conn.commit()
+                compile_sqlte3_to_html_history()
+        elif url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html").toString():
             try:
                 self.urlbar.setText("fax://history")
-                self.c.execute(
-                    f"INSERT INTO history VALUES ('{now.month}/{now.day}/{now.year}', '{now.hour}:{now.minute}:{now.second}', 'fax://history')")
-                self.conn.commit()
-                compile_sqlte3_to_html()
+                self.history_c.execute(
+                    f"INSERT INTO history VALUES ('{now.year}-{now.month}-{now.day}', '{now.hour}:{now.minute}:{now.second}', 'fax://history')")
+                self.history_conn.commit()
+                compile_sqlte3_to_html_history()
             except:
                 print(
-                    "Cannot access file \"search_history.db\"; most likely because of a wrong directory error.")
+                    "Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
+        else:
+            try:
+                self.urlbar.setText("fax://bookmarks")
+                self.history_c.execute(
+                    f"INSERT INTO history VALUES ('{now.year}-{now.month}-{now.day}', '{now.hour}:{now.minute}:{now.second}', 'fax://bookmarks')")
+                self.history_conn.commit()
+                compile_sqlte3_to_html_history()
+            except:
+                print(
+                    "Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
 
         if browser != self.tabs.currentWidget():
             return
@@ -370,7 +416,7 @@ class MainWindow(QMainWindow):
         page = WebEnginePage(browser)
         browser.setPage(page)
         browser.setUrl(qurl)
-        i = self.tabs.addTab(browser, "Your Browsing History")
+        i = self.tabs.addTab(browser, "History")
         self.tabs.setCurrentIndex(i)
         browser.urlChanged.connect(lambda qurl, browser=browser:
                                    self.updateurl(qurl, browser))
@@ -386,22 +432,81 @@ class MainWindow(QMainWindow):
         browser.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
 
     def removeHistory(self):
-        self.conn.commit()
-        self.conn.close()
+        self.history_conn.commit()
+        self.history_conn.close()
 
         os.remove("history/search_history.db")
 
         try:
-            self.conn = sqlite3.connect("history/search_history.db")
-            self.c = self.conn.cursor()
+            self.history_conn = sqlite3.connect("history/search_history.db")
+            self.history_c = self.history_conn.cursor()
 
-            self.c.execute(
-                "CREATE TABLE IF NOT EXISTS history(date text, time text, link text)")
+            self.history_c.execute(
+                "CREATE TABLE IF NOT EXISTS history(date date, time time, link text)")
         except:
             print(
                 "Cannot access file \"search_history.db\"; most likely because of a wrong directory error.")
 
-        compile_sqlte3_to_html()
+        compile_sqlte3_to_html_history()
+
+    def bookmark(self):
+        now = datetime.now()
+        if self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/bookmarks/bookmarks.html").toString():
+            self.bookmark_c.execute(
+                f"INSERT INTO bookmark VALUES ('{now.year}-{now.month}-{now.day} {now.hour}:{now.minute}:{now.second}', 'fax://bookmarks')")
+        elif self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html").toString():
+            self.bookmark_c.execute(
+                f"INSERT INTO bookmark VALUES ('{now.year}-{now.month}-{now.day} {now.hour}:{now.minute}:{now.second}', 'fax://history')")
+        else:
+            self.bookmark_c.execute(
+                f"INSERT INTO bookmark VALUES ('{now.year}-{now.month}-{now.day} {now.hour}:{now.minute}:{now.second}', '{self.url.toString()}')")
+        self.bookmark_conn.commit()
+
+        compile_sqlte3_to_html_bookmark()
+
+    def openBookmarks(self):
+        compile_sqlte3_to_html_bookmark()
+
+        current = os.getcwd()
+        file_path = current + "/bookmarks/bookmarks.html"
+        qurl = QUrl.fromLocalFile(file_path)
+        global browser
+        browser = QWebEngineView()
+        browser.setContextMenuPolicy(Qt.PreventContextMenu)
+        page = WebEnginePage(browser)
+        browser.setPage(page)
+        browser.setUrl(qurl)
+        i = self.tabs.addTab(browser, "Bookmarks")
+        self.tabs.setCurrentIndex(i)
+        browser.urlChanged.connect(lambda qurl, browser=browser:
+                                   self.updateurl(qurl, browser))
+        browser.loadFinished.connect(lambda _, i=i, browser=browser:
+                                     self.tabs.setTabText(i, browser.page().title()))
+        browser.page().fullScreenRequested.connect(
+            lambda request, browser=browser: self.handle_fullscreen_requested(
+                request, browser
+            )
+        )
+        self.urlbar.setText("fax://bookmarks")
+        browser.page().profile().setHttpUserAgent(f'FAX/{version}')
+        browser.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
+        
+    def removeBookmarks(self):
+        self.bookmark_conn.commit()
+        self.bookmark_conn.close()
+
+        os.remove("bookmarks/bookmarks.db")
+
+        try:
+            self.bookmark_conn = sqlite3.connect("bookmarks/bookmarks.db")
+            self.bookmark_c = self.bookmark_conn.cursor()
+
+            self.bookmark_c.execute("CREATE TABLE IF NOT EXISTS bookmark(date datetime, link text)")
+        except:
+            print(
+                "Cannot access file \"bookmarks.db\"; most likely because of a wrong directory error.")
+
+        compile_sqlte3_to_html_bookmark()
 
 
 # Executing The Browser
