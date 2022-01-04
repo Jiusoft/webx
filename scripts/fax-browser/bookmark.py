@@ -11,7 +11,7 @@ def compile_sqlte3_to_html_bookmark():
         print(
             "Cannot access file \"search_history.db\"; most likely because of a wrong directory error.")
     
-    query = "SELECT link FROM bookmark ORDER BY date DESC"
+    query = "SELECT DISTINCT link FROM bookmark ORDER BY date DESC"
 
     df = pd.read_sql_query(query, conn)
 
