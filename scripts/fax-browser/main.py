@@ -69,7 +69,8 @@ try:
 
     bookmark_conn = sqlite3.connect("bookmarks/bookmarks.db")
     bookmark_c = bookmark_conn.cursor()
-    bookmark_c.execute("CREATE TABLE IF NOT EXISTS bookmark(date datetime, link text)")
+    bookmark_c.execute(
+        "CREATE TABLE IF NOT EXISTS bookmark(date datetime, link text)")
     bookmark_conn.commit()
     bookmark_conn.close()
 except:
@@ -220,7 +221,7 @@ class MainWindow(QMainWindow):
         clearBookmarksAction = QAction("&Clear Bookmarks", self)
         clearBookmarksAction.setShortcut('Ctrl+Shift+C')
         clearBookmarksAction.triggered.connect(self.removeBookmarks)
-        
+
         # History
         historyAction = QAction("&Your Browsing History", self)
         historyAction.setShortcut('Ctrl+H')
@@ -238,15 +239,15 @@ class MainWindow(QMainWindow):
         fileMenu.addAction(openfile)
         fileMenu.addAction(newwinAction)
         fileMenu.addAction(exitAction)
-        
+
         helpMenu = menubar.addMenu('&Help')
         helpMenu.addAction(aboutAction)
-        
+
         bookmarkManagerMenu = menubar.addMenu('&Bookmark Manager')
         bookmarkManagerMenu.addAction(bookmarkAction)
         bookmarkManagerMenu.addAction(openBookmarksAction)
         bookmarkManagerMenu.addAction(clearBookmarksAction)
-        
+
         historyMenu = menubar.addMenu('&History')
         historyMenu.addAction(historyAction)
         historyMenu.addAction(clearHistoryAction)
@@ -369,6 +370,13 @@ class MainWindow(QMainWindow):
     def updateurl(self, url, browser=None):
         now = datetime.now()
 
+        year = now.strftime("%Y")
+        month = now.strftime("%m")
+        day = now.strftime("%d")
+        hour = now.strftime("%H")
+        minute = now.strftime("%M")
+        second = now.strftime("%S")
+
         self.url = url
 
         if len(url.toString()) > 100:
@@ -379,14 +387,14 @@ class MainWindow(QMainWindow):
         if url.toString() != QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html").toString() and url.toString() != QUrl.fromLocalFile(f"{os.getcwd()}/bookmarks/bookmarks.html").toString():
             if str(url.toString()) != "":
                 self.history_c.execute(
-                    f"INSERT INTO history VALUES ('{now.year}-{now.month}-{now.day}', '{now.hour}:{now.minute}:{now.second}', '{str(url.toString())}')")
+                    f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', '{str(url.toString())}')")
                 self.history_conn.commit()
                 compile_sqlte3_to_html_history()
         elif url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html").toString():
             try:
                 self.urlbar.setText("fax://history")
                 self.history_c.execute(
-                    f"INSERT INTO history VALUES ('{now.year}-{now.month}-{now.day}', '{now.hour}:{now.minute}:{now.second}', 'fax://history')")
+                    f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'fax://history')")
                 self.history_conn.commit()
                 compile_sqlte3_to_html_history()
             except:
@@ -396,7 +404,7 @@ class MainWindow(QMainWindow):
             try:
                 self.urlbar.setText("fax://bookmarks")
                 self.history_c.execute(
-                    f"INSERT INTO history VALUES ('{now.year}-{now.month}-{now.day}', '{now.hour}:{now.minute}:{now.second}', 'fax://bookmarks')")
+                    f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'fax://bookmarks')")
                 self.history_conn.commit()
                 compile_sqlte3_to_html_history()
             except:
@@ -451,15 +459,23 @@ class MainWindow(QMainWindow):
 
     def bookmark(self):
         now = datetime.now()
+
+        year = now.strftime("%Y")
+        month = now.strftime("%m")
+        day = now.strftime("%d")
+        hour = now.strftime("%H")
+        minute = now.strftime("%M")
+        second = now.strftime("%S")
+
         if self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/bookmarks/bookmarks.html").toString():
             self.bookmark_c.execute(
-                f"INSERT INTO bookmark VALUES ('{now.year}-{now.month}-{now.day} {now.hour}:{now.minute}:{now.second}', 'fax://bookmarks')")
+                f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'fax://bookmarks')")
         elif self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html").toString():
             self.bookmark_c.execute(
-                f"INSERT INTO bookmark VALUES ('{now.year}-{now.month}-{now.day} {now.hour}:{now.minute}:{now.second}', 'fax://history')")
+                f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'fax://history')")
         else:
             self.bookmark_c.execute(
-                f"INSERT INTO bookmark VALUES ('{now.year}-{now.month}-{now.day} {now.hour}:{now.minute}:{now.second}', '{self.url.toString()}')")
+                f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', '{self.url.toString()}')")
         self.bookmark_conn.commit()
 
         compile_sqlte3_to_html_bookmark()
@@ -490,7 +506,7 @@ class MainWindow(QMainWindow):
         self.urlbar.setText("fax://bookmarks")
         browser.page().profile().setHttpUserAgent(f'FAX/{version}')
         browser.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
-        
+
     def removeBookmarks(self):
         self.bookmark_conn.commit()
         self.bookmark_conn.close()
@@ -501,7 +517,8 @@ class MainWindow(QMainWindow):
             self.bookmark_conn = sqlite3.connect("bookmarks/bookmarks.db")
             self.bookmark_c = self.bookmark_conn.cursor()
 
-            self.bookmark_c.execute("CREATE TABLE IF NOT EXISTS bookmark(date datetime, link text)")
+            self.bookmark_c.execute(
+                "CREATE TABLE IF NOT EXISTS bookmark(date datetime, link text)")
         except:
             print(
                 "Cannot access file \"bookmarks.db\"; most likely because of a wrong directory error.")
