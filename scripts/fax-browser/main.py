@@ -222,7 +222,7 @@ class MainWindow(QMainWindow):
         clearBookmarksAction.triggered.connect(self.removeBookmarks)
 
         # History
-        historyAction = QAction("&Your Browsing History", self)
+        historyAction = QAction("&View Browsing History", self)
         historyAction.setShortcut('Ctrl+H')
         historyAction.triggered.connect(self.checkHistory)
 
