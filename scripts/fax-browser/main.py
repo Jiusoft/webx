@@ -355,14 +355,13 @@ class MainWindow(QMainWindow):
 
     def navigatetourl(self):
         url = QUrl(self.urlbar.text())
-        if self.urlbar.text() == "chrome://dino":
+        if self.urlbar.text() == "chrome:dino" or self.urlbar.text() == "chrome://dino":
             self.urlbar.setText("fax://snake")
-            url = QUrl("")
-        if self.urlbar.text() == "fax://history":
+        if self.urlbar.text() == "fax:history" or self.urlbar.text() == "fax://history":
             url = QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html")
-        if self.urlbar.text() == "fax://bookmarks":
+        if self.urlbar.text() == "fax:bookmarks" or self.urlbar.text() == "fax://bookmarks":
             url = QUrl.fromLocalFile(f"{os.getcwd()}/bookmarks/bookmarks.html")
-        if self.urlbar.text() == "fax://snake":
+        if self.urlbar.text() == "fax:snake" or self.urlbar.text() == "fax://snake":
             url = QUrl.fromLocalFile(f"{os.getcwd()}/snake_game/snake.html")
         if url.scheme() == "":
             url.setScheme("https")
