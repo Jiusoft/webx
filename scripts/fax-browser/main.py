@@ -385,13 +385,7 @@ class MainWindow(QMainWindow):
         else:
             self.urlbar.setText(url.toString())
 
-        if url.toString() != QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html").toString() and url.toString() != QUrl.fromLocalFile(f"{os.getcwd()}/bookmarks/bookmarks.html").toString() and url.toString() != QUrl.fromLocalFile(f"{os.getcwd()}/snake_game/snake.html").toString():
-            if str(url.toString()) != "":
-                self.history_c.execute(
-                    f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', '{str(url.toString())}')")
-                self.history_conn.commit()
-                compile_sqlte3_to_html_history()
-        elif url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html").toString():
+        if url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html").toString():
             try:
                 self.urlbar.setText("fax://history")
                 self.history_c.execute(
@@ -411,16 +405,23 @@ class MainWindow(QMainWindow):
             except:
                 print(
                     "Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
-        else:
+        elif url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/bookmarks/bookmarks.html").toString():
             try:
                 self.urlbar.setText("fax://bookmarks")
                 self.history_c.execute(
                     f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'fax://bookmarks')")
                 self.history_conn.commit()
+                compile_sqlte3_to_html_bookmark()
                 compile_sqlte3_to_html_history()
             except:
                 print(
                     "Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
+        else:
+            if str(url.toString()) != "":
+                self.history_c.execute(
+                    f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', '{str(url.toString())}')")
+                self.history_conn.commit()
+                compile_sqlte3_to_html_history()
 
         if browser != self.tabs.currentWidget():
             return
