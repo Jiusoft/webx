@@ -218,8 +218,7 @@ class MainWindow(QMainWindow):
         openBookmarksAction.triggered.connect(self.openBookmarks)
 
         # Clear Bookmarks
-        clearBookmarksAction = QAction("&Clear Bookmarks", self)
-        clearBookmarksAction.setShortcut('Ctrl+Shift+C')
+        clearBookmarksAction = QAction("&Delete All Bookmarks", self)
         clearBookmarksAction.triggered.connect(self.removeBookmarks)
 
         # History
@@ -240,10 +239,7 @@ class MainWindow(QMainWindow):
         fileMenu.addAction(newwinAction)
         fileMenu.addAction(exitAction)
 
-        helpMenu = menubar.addMenu('&Help')
-        helpMenu.addAction(aboutAction)
-
-        bookmarkManagerMenu = menubar.addMenu('&Bookmark Manager')
+        bookmarkManagerMenu = menubar.addMenu('&Bookmarks')
         bookmarkManagerMenu.addAction(bookmarkAction)
         bookmarkManagerMenu.addAction(openBookmarksAction)
         bookmarkManagerMenu.addAction(clearBookmarksAction)
@@ -251,6 +247,9 @@ class MainWindow(QMainWindow):
         historyMenu = menubar.addMenu('&History')
         historyMenu.addAction(historyAction)
         historyMenu.addAction(clearHistoryAction)
+
+        helpMenu = menubar.addMenu('&Help')
+        helpMenu.addAction(aboutAction)
 
     # Defining things
     def openfile(self):
