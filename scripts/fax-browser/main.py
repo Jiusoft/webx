@@ -391,7 +391,6 @@ class MainWindow(QMainWindow):
                 self.history_c.execute(
                     f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'fax://history')")
                 self.history_conn.commit()
-                compile_sqlte3_to_html_history()
             except:
                 print(
                     "Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
@@ -401,7 +400,6 @@ class MainWindow(QMainWindow):
                 self.history_c.execute(
                     f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'fax://snake')")
                 self.history_conn.commit()
-                compile_sqlte3_to_html_history()
             except:
                 print(
                     "Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
@@ -411,8 +409,6 @@ class MainWindow(QMainWindow):
                 self.history_c.execute(
                     f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'fax://bookmarks')")
                 self.history_conn.commit()
-                compile_sqlte3_to_html_bookmark()
-                compile_sqlte3_to_html_history()
             except:
                 print(
                     "Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
@@ -421,7 +417,8 @@ class MainWindow(QMainWindow):
                 self.history_c.execute(
                     f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', '{str(url.toString())}')")
                 self.history_conn.commit()
-                compile_sqlte3_to_html_history()
+        
+        compile_sqlte3_to_html_history()
 
         if browser != self.tabs.currentWidget():
             return
