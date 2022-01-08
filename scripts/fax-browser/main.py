@@ -360,6 +360,8 @@ class MainWindow(QMainWindow):
             url = QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html")
         if self.urlbar.text() == "fax://bookmarks":
             url = QUrl.fromLocalFile(f"{os.getcwd()}/bookmarks/bookmarks.html")
+        if self.urlbar.text() == "fax://snake":
+            url = QUrl.fromLocalFile(f"{os.getcwd()}/snake_game/snake.html")
         if url.scheme() == "":
             url.setScheme("https")
         if url.scheme() == "http":
@@ -384,7 +386,7 @@ class MainWindow(QMainWindow):
         else:
             self.urlbar.setText(url.toString())
 
-        if url.toString() != QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html").toString() and url.toString() != QUrl.fromLocalFile(f"{os.getcwd()}/bookmarks/bookmarks.html").toString():
+        if url.toString() != QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html").toString() and url.toString() != QUrl.fromLocalFile(f"{os.getcwd()}/bookmarks/bookmarks.html").toString() and url.toString() != QUrl.fromLocalFile(f"{os.getcwd()}/snake_game/snake.html").toString():
             if str(url.toString()) != "":
                 self.history_c.execute(
                     f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', '{str(url.toString())}')")
@@ -395,6 +397,16 @@ class MainWindow(QMainWindow):
                 self.urlbar.setText("fax://history")
                 self.history_c.execute(
                     f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'fax://history')")
+                self.history_conn.commit()
+                compile_sqlte3_to_html_history()
+            except:
+                print(
+                    "Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
+        elif url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/snake_game/snake.html").toString():
+            try:
+                self.urlbar.setText("fax://snake")
+                self.history_c.execute(
+                    f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'fax://snake')")
                 self.history_conn.commit()
                 compile_sqlte3_to_html_history()
             except:
@@ -473,6 +485,9 @@ class MainWindow(QMainWindow):
         elif self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html").toString():
             self.bookmark_c.execute(
                 f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'fax://history')")
+        elif self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/snake_game/snake.html").toString():
+            self.bookmark_c.execute(
+                f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'fax://snake')")
         else:
             self.bookmark_c.execute(
                 f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', '{self.url.toString()}')")
