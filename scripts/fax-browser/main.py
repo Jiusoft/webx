@@ -355,6 +355,9 @@ class MainWindow(QMainWindow):
 
     def navigatetourl(self):
         url = QUrl(self.urlbar.text())
+        if self.urlbar.text() == "chrome://dino":
+            self.urlbar.setText("fax://snake")
+            url = QUrl("")
         if self.urlbar.text() == "fax://history":
             url = QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html")
         if self.urlbar.text() == "fax://bookmarks":
