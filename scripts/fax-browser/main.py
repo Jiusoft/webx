@@ -498,6 +498,9 @@ class MainWindow(QMainWindow):
         elif self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/snake_game/snake.html").toString():
             self.bookmark_c.execute(
                 f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'fax://snake')")
+        elif self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/links/links.html").toString():
+            self.bookmark_c.execute(
+                f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'fax://links')")
         else:
             self.bookmark_c.execute(
                 f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', '{self.url.toString()}')")
