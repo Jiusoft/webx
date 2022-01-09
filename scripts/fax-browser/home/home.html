@@ -1,68 +1,68 @@
 <!DOCTYPE html>
-    <html lang="en">
-        <head>
-            <title>Fax Homepage</title>
-            <style>
-                @import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@500&display=swap");
+<html lang="en">
+    <head>
+        <title>Fax Homepage</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@500&display=swap");
 
-                body {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    height: 100%;
-                    overflow: hidden;
-                    font-size: 30px;
-                    background-image: url("https://cdn-images-1.medium.com/max/2000/1*YRINRZFr0E1FRJ4JpizEMw.jpeg");
-                    background-repeat: no-repeat;
-                    background-attachment: fixed;
-                    background-size: 100% 100%;
-                }
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+                overflow: hidden;
+                font-size: 30px;
+                background-image: url("https://cdn-images-1.medium.com/max/2000/1*YRINRZFr0E1FRJ4JpizEMw.jpeg");
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-size: 100% 100%;
+            }
 
-                #searchbar {
-                    width: 300px;
-                    height: 35px;
-                }
+            #searchbar {
+                width: 300px;
+                height: 35px;
+            }
 
-                #enter {
-                    height: 35px;
-                    width: 60px;
-                }
+            #enter {
+                height: 35px;
+                width: 60px;
+            }
 
-                h1,
-                p {
-                    color: white;
-                    font-family: "Work Sans", sans-serif;
-                }
-            </style>
-        </head>
-        <body>
-            <center>
-                <h1>Fax Homepage</h1>
-                <p>Welcome to Fax Browser!</p>
-                <form id="form" method="get">
-                    <input
-                        type="text"
-                        id="searchbar"
-                        placeholder="Search Here..."
-                    />
-                    <input type="submit" value="Search" id="enter" />
-                </form>
-                <script>
-                    const f = document.getElementById('form');
-                    const q = document.getElementById('searchbar');
-                    const ddg = "https://duckduckgo.com/?q=";
+            h1,
+            p {
+                color: white;
+                font-family: "Work Sans", sans-serif;
+            }
+        </style>
+    </head>
+    <body>
+        <center>
+            <h1>Fax Homepage</h1>
+            <p>Welcome to Fax Browser!</p>
+            <form id="form" method="get">
+                <input
+                    type="text"
+                    id="searchbar"
+                    placeholder="Search Here..."
+                />
+                <input type="submit" value="Search" id="enter" />
+            </form>
+            <script>
+                const f = document.getElementById('form');
+                const q = document.getElementById('searchbar');
+                const ddg = "https://duckduckgo.com/?q=";
 
-                    function submitted(event) {
-                        if(q.value !== ""){
-                            event.preventDefault();
-                            const url = ddg + q.value;
-                            const win = window.open(url, '_parent');
-                            win.focus();
-                        }
+                function submitted(event) {
+                    if(q.value !== ""){
+                        event.preventDefault();
+                        const url = ddg + q.value;
+                        const win = window.open(url, '_parent');
+                        win.focus();
                     }
+                }
 
-                    f.addEventListener('submit', submitted);
-                </script>
-            </center>
-        </body>
-    </html>
+                f.addEventListener('submit', submitted);
+            </script>
+        </center>
+    </body>
+</html>
