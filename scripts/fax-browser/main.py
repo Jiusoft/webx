@@ -349,7 +349,7 @@ class MainWindow(QMainWindow):
 
     def closetab(self, i):
         if self.tabs.count() < 2:
-            self.tabs.currentWidget().setUrl(QUrl('https://duckduckgo.com/'))
+            self.tabs.currentWidget().setUrl(QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html"))
         else:
             self.tabs.removeTab(i)
 
@@ -409,7 +409,7 @@ class MainWindow(QMainWindow):
             except:
                 print(
                     "Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
-        elif url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html").toString():
+        elif url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html").toString() or self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html").toString() + "?":
             try:
                 self.urlbar.setText("fax://home")
                 self.history_c.execute(
@@ -509,7 +509,7 @@ class MainWindow(QMainWindow):
         elif self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/snake_game/snake.html").toString():
             self.bookmark_c.execute(
                 f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'fax://snake')")
-        elif self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html").toString():
+        elif self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html").toString() or self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html").toString() + "?":
             self.bookmark_c.execute(
                 f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'fax://home')")
         elif self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/links/links.html").toString():

@@ -39,15 +39,30 @@
             <center>
                 <h1>Fax Homepage</h1>
                 <p>Welcome to Fax Browser!</p>
-                <form action="https://www.duckduckgo.com/" method="get">
+                <form  id="form" method="get">
                     <input
                         type="text"
-                        name="q"
                         id="searchbar"
                         placeholder="Search Here..."
                     />
                     <input type="submit" value="Search" id="enter" />
                 </form>
+                <script>
+                    const f = document.getElementById('form');
+                    const q = document.getElementById('searchbar');
+                    const ddg = "https://duckduckgo.com/?q=";
+
+                    function submitted(event) {
+                        if(q.value !== ""){
+                            event.preventDefault();
+                            const url = ddg + q.value;
+                            const win = window.open(url, '_parent');
+                            win.focus();
+                        }
+                    }
+
+                    f.addEventListener('submit', submitted);
+                </script>
             </center>
         </body>
     </html>
