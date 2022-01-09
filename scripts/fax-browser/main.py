@@ -297,7 +297,7 @@ class MainWindow(QMainWindow):
 
     def newtab(self, *args, qurl=None, label="about:blank"):
         if qurl is None:
-            qurl = QUrl('https://duckduckgo.com/')
+            qurl = QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html")
         global browser
         browser = QWebEngineView()
         browser.setContextMenuPolicy(Qt.PreventContextMenu)
@@ -359,6 +359,8 @@ class MainWindow(QMainWindow):
             self.urlbar.setText("fax://snake")
         if self.urlbar.text() == "fax:history" or self.urlbar.text() == "fax://history":
             url = QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html")
+        if self.urlbar.text() == "fax:home" or self.urlbar.text() == "fax://home":
+            url = QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html")
         if self.urlbar.text() == "fax:bookmarks" or self.urlbar.text() == "fax://bookmarks":
             url = QUrl.fromLocalFile(f"{os.getcwd()}/bookmarks/bookmarks.html")
         if self.urlbar.text() == "fax:links" or self.urlbar.text() == "fax://links":
@@ -403,6 +405,15 @@ class MainWindow(QMainWindow):
                 self.urlbar.setText("fax://snake")
                 self.history_c.execute(
                     f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'fax://snake')")
+                self.history_conn.commit()
+            except:
+                print(
+                    "Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
+        elif url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html").toString():
+            try:
+                self.urlbar.setText("fax://home")
+                self.history_c.execute(
+                    f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'fax://home')")
                 self.history_conn.commit()
             except:
                 print(
@@ -498,6 +509,9 @@ class MainWindow(QMainWindow):
         elif self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/snake_game/snake.html").toString():
             self.bookmark_c.execute(
                 f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'fax://snake')")
+        elif self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html").toString():
+            self.bookmark_c.execute(
+                f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'fax://home')")
         elif self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/links/links.html").toString():
             self.bookmark_c.execute(
                 f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'fax://links')")
