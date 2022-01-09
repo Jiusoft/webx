@@ -361,6 +361,8 @@ class MainWindow(QMainWindow):
             url = QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html")
         if self.urlbar.text() == "fax:bookmarks" or self.urlbar.text() == "fax://bookmarks":
             url = QUrl.fromLocalFile(f"{os.getcwd()}/bookmarks/bookmarks.html")
+        if self.urlbar.text() == "fax:links" or self.urlbar.text() == "fax://links":
+            url = QUrl.fromLocalFile(f"{os.getcwd()}/links/links.html")
         if self.urlbar.text() == "fax:snake" or self.urlbar.text() == "fax://snake":
             url = QUrl.fromLocalFile(f"{os.getcwd()}/snake_game/snake.html")
         if url.scheme() == "":
@@ -401,6 +403,15 @@ class MainWindow(QMainWindow):
                 self.urlbar.setText("fax://snake")
                 self.history_c.execute(
                     f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'fax://snake')")
+                self.history_conn.commit()
+            except:
+                print(
+                    "Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
+        elif url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/links/links.html").toString():
+            try:
+                self.urlbar.setText("fax://links")
+                self.history_c.execute(
+                    f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'fax://links')")
                 self.history_conn.commit()
             except:
                 print(
