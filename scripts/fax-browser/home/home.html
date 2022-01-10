@@ -32,6 +32,19 @@
                 color: white;
                 font-family: "Work Sans", sans-serif;
             }
+
+            #searchbar {
+                border-radius: 0.4em;
+            }
+
+            #enter {
+                border-radius: 1em;
+                transition: 100ms ease-in-out;
+            }
+
+            #enter:hover {
+                background-color: rgb(173, 173, 173);
+            }
         </style>
     </head>
     <body>
@@ -58,6 +71,7 @@
                         const win = window.open(url, '_parent');
                         win.focus();
                     }
+                    q.value = ""
                 }
 
                 f.addEventListener('submit', submitted);
