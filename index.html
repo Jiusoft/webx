@@ -1,1 +1,404 @@
-test
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Fax Browser - Jiusoft</title>
+        <script
+            src="https://kit.fontawesome.com/6338eea7b6.js"
+            crossorigin="anonymous"
+        ></script>
+        <link rel="shortcut icon" href="images/fax.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Montserrat&family=Source+Code+Pro:wght@500&display=swap");
+
+            * {
+                font-family: "Montserrat", sans-serif;
+                z-index: 1;
+            }
+
+            html {
+                scroll-behavior: smooth;
+            }
+
+            body {
+                color: white;
+                background-color: black;
+                position: relative;
+            }
+
+            body {
+                height: 100vh;
+            }
+
+            h1,
+            header div a {
+                font-family: "Source Code Pro", monospace;
+            }
+
+            .btn {
+                box-sizing: border-box;
+                background-color: transparent;
+                border-radius: 0.6em;
+                display: flex;
+                align-self: center;
+                font-size: 1rem;
+                font-weight: 400;
+                margin: 20px;
+                padding: 1.2em 2.8em;
+                text-align: center;
+                font-weight: 700;
+
+                border-color: #e23232;
+                color: #fff;
+
+                box-shadow: 0 0 40px 40px #e23232 inset, 0 0 0 0 #e23232;
+
+                -webkit-transition: all 150ms ease-in-out;
+                transition: all 300ms ease-in-out;
+            }
+
+            .btn:hover {
+                outline: 0;
+                box-shadow: 0 0 10px 0 #e23232 inset, 0 0 10px 4px #e23232;
+            }
+
+            #typewriter {
+                text-align: center;
+                line-height: 1.3;
+                font-size: 40px;
+            }
+
+            .subtitle {
+                font-size: 20px;
+                text-align: center;
+            }
+
+            section {
+                margin-top: 100px;
+            }
+
+            section h2 {
+                margin-bottom: 20px;
+                font-size: 30px;
+                text-align: center;
+            }
+
+            .development {
+                display: flex;
+                align-items: center;
+                font-size: clamp(13px, 2vw, 23px);
+                margin-right: 10vw;
+                margin-left: 10vw;
+            }
+
+            .development img {
+                margin-right: 3vw;
+            }
+
+            #development h3 {
+                margin-top: 50px;
+                text-align: center;
+                font-size: 25px;
+            }
+
+            #development img {
+                border-radius: 50%;
+                height: clamp(100px, 15vw, 180px);
+            }
+
+            .link {
+                color: rgb(138, 112, 240);
+                background-image: linear-gradient(90deg, red, blue);
+                background-size: 0% 2px;
+                background-repeat: no-repeat;
+                text-decoration: none;
+                background-position: left bottom;
+                transition: background-size 300ms ease;
+                margin: 0;
+            }
+
+            .link:hover {
+                background-size: 100% 2px;
+            }
+
+            #contributors {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #contributors div {
+                margin-bottom: 10px;
+            }
+
+            #contributors .caption {
+                margin-bottom: 40px;
+                text-align: center;
+            }
+
+            #contributors div img {
+                margin-left: 50px;
+                margin-right: 50px;
+            }
+
+            header {
+                position: fixed;
+                width: 100%;
+                display: flex;
+                justify-content: space-evenly;
+                margin: 0;
+                background-color: rgb(102, 102, 102);
+                padding: 20px;
+                margin-bottom: 20px;
+                font-size: 1.2em;
+                top: 0;
+                z-index: 2;
+            }
+
+            header div a {
+                text-decoration: none;
+                color: white;
+                font-size: clamp(20px, 2vw, 25px);
+                transition: 250ms ease-in-out;
+            }
+
+            header div a:hover {
+                color: rgb(170, 170, 170);
+            }
+
+            #main {
+                margin-left: 5%;
+                margin-right: 5%;
+                margin-top: 85px;
+            }
+
+            gallery {
+                display: flex;
+                justify-content: space-evenly;
+                margin-bottom: 20px;
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            gallery div {
+                width: 50%;
+                padding-left: 30px;
+                padding-right: 30px;
+            }
+
+            gallery h3 {
+                margin: 0;
+                padding: 0;
+                text-align: center;
+                font-size: clamp(20px, 2.5vw, 25px);
+            }
+
+            gallery p {
+                text-align: justify;
+                font-size: clamp(14px, 2vw, 20px);
+            }
+
+            @media screen and (max-width: 640px) {
+                gallery p {
+                    text-align: left;
+                }
+            }
+
+            #why {
+                padding-bottom: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div><a href="#main">Home</a></div>
+            <div><a href="#development">Development</a></div>
+            <div><a href="#why">Why Fax?</a></div>
+        </header>
+        <div id="main">
+            <center>
+                <img src="images/fax.png" width="150" />
+            </center>
+            <h1 id="typewriter">Fax Browser</h1>
+            <p class="subtitle">
+                Fax Browser is a simple web browser built on Python. No
+                extensions, no extra features, only browsing!
+            </p>
+            <br />
+            <center>
+                <form
+                    action="https://github.com/jiusoft/fax-browser/releases/"
+                    target="_blank"
+                >
+                    <button class="btn third" type="submit">
+                        Go to GitHub Page to Download
+                    </button>
+                </form>
+            </center>
+
+            <section id="development">
+                <h2>Development</h2>
+                <div class="development">
+                    <div class="image">
+                        <img src="images/jothin_kumar.png" />
+                    </div>
+                    <div>
+                        Development was first started by Jothin Kumar in 2021.
+                        Together with other volunteers from all around the world
+                        at
+                        <a class="link" href="https://jiu-soft.com/">Jiusoft</a
+                        >, now it has a history and bookmark system; and reload,
+                        back, and forward functions. But don't think that we're
+                        stopping here. We are still planning to add more
+                        features, so stay tuned!
+                    </div>
+                </div>
+                <h3>Contributers</h3>
+                <div id="contributors">
+                    <div><img src="images/richard_barlian.jfif" /></div>
+                    <div class="caption">Richard Barlian</div>
+                    <div><img src="images/orlando_huang.png" /></div>
+                    <div class="caption">Orlando Huang</div>
+                    <div><img src="images/omar_moustafa.png" /></div>
+                    <div class="caption">Omar Moustafa</div>
+                    <div><img src="images/jothin_kumar.png" /></div>
+                    <div class="caption">Jothin Kumar</div>
+                </div>
+            </section>
+
+            <section id="why">
+                <h2>Why you will like Fax</h2>
+                <gallery>
+                    <div>
+                        <h3>Your data is in your hands</h3>
+                        <p>
+                            We do not have nor use your data in anyway. Your
+                            history and bookmarks are saved in a local file,
+                            situated on <strong>your</strong> computer. Your
+                            history and bookmarks are not saved on the internet.
+                            The only copy of your history and bookmarks is in
+                            your hands, except if a third-party collects that
+                            information (like your internet provider).
+                        </p>
+                    </div>
+                    <div>
+                        <h3>See the code yourself</h3>
+                        <p>
+                            This project is open source and free software,
+                            licensed under
+                            <a
+                                class="link"
+                                href="https://www.gnu.org/licenses/gpl-3.0.en.html"
+                                >GPL-3</a
+                            >. All code for this project is on
+                            <a
+                                class="link"
+                                href="https://github.com/Jiusoft/fax-browser"
+                                >Github</a
+                            >. This means you can modify and customize the code
+                            as needed.
+                        </p>
+                    </div>
+                </gallery>
+                <!--
+                <gallery>
+                    <div>
+                        <h3>Your data is in your hands</h3>
+                        <p>
+                            We do not have nor use your data in anyway. Your
+                            history and bookmarks are saved in a local file,
+                            situated on <strong>your</strong> computer. Your
+                            history and bookmarks are not saved on the internet.
+                            The only copy of your history and bookmarks is in
+                            your hands, except if a third-party collects that
+                            information (like your internet provider).
+                        </p>
+                    </div>
+                    <div>
+                        <h3>Your data is in your hands</h3>
+                        <p>
+                            We do not have nor use your data in anyway. Your
+                            history and bookmarks are saved in a local file,
+                            situated on <strong>your</strong> computer. Your
+                            history and bookmarks are not saved on the internet.
+                            The only copy of your history and bookmarks is in
+                            your hands, except if a third-party collects that
+                            information (like your internet provider).
+                        </p>
+                    </div>
+                </gallery>
+            --></section>
+        </div>
+        <script>
+            const textDisplay = document.getElementById("typewriter");
+            const phrases = ["Fax Browser", "The Browser You Need"];
+            let i = 0;
+            let j = 0;
+            let currentPhrase = [];
+            let isDeleting = false;
+            let isEnd = false;
+
+            function loop() {
+                isEnd = false;
+                textDisplay.innerHTML = currentPhrase.join("");
+
+                if (i < phrases.length) {
+                    if (!isDeleting && j <= phrases[i].length) {
+                        currentPhrase.push(phrases[i][j]);
+                        j++;
+                        textDisplay.innerHTML = currentPhrase.join("");
+                    }
+
+                    if (isDeleting && j <= phrases[i].length) {
+                        currentPhrase.pop(phrases[i][j]);
+                        j--;
+                        textDisplay.innerHTML = currentPhrase.join("");
+                    }
+
+                    if (j == phrases[i].length) {
+                        isEnd = true;
+                        isDeleting = true;
+                    }
+
+                    if (isDeleting && j === 0) {
+                        currentPhrase = [];
+                        isDeleting = false;
+                        i++;
+                        if (i === phrases.length) {
+                            i = 0;
+                        }
+                    }
+                }
+
+                if (!textDisplay.innerHTML) {
+                    textDisplay.innerHTML = "ㅤ";
+                }
+
+                const spedUp = Math.random() * (100 - 50) + 100;
+                const normalSpeed = Math.random() * (150 - 200) + 200;
+                const time = isEnd ? 2000 : isDeleting ? spedUp : normalSpeed;
+                setTimeout(loop, time);
+            }
+
+            loop();
+
+            var scrollBefore = 0;
+
+            window.addEventListener("scroll", function (e) {
+                const scrolled = window.scrollY;
+
+                if (scrollBefore > scrolled) {
+                    $("header").fadeIn(200);
+                    scrollBefore = scrolled;
+                    //Desired action
+                } else {
+                    scrollBefore = scrolled;
+                    $("header").fadeOut(200);
+                    //Desired action
+                }
+            });
+        </script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    </body>
+</html>
