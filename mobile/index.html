@@ -9,6 +9,13 @@
         ></script>
         <link rel="shortcut icon" href="/images/fax.png" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script>
+            function makesureuserisnotonpc(){
+				if(!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+					window.location.replace("/")
+				}
+			}
+        </script>
         <style>
             @import url("https://fonts.googleapis.com/css2?family=Montserrat&family=Source+Code+Pro:wght@500&display=swap");
 
@@ -208,7 +215,7 @@
             }
         </style>
     </head>
-    <body>
+    <body onload="makesureuserisnotonpc()">
         <header>
             <div style="text-align: center;">
                 <a href="#main">Home</a>
