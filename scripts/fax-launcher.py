@@ -153,16 +153,7 @@ def launch():
         if not exists('launch-command'):
             fetch_launch_command()
         with open('launch-command', 'r') as file:
-            command = file.read().strip('\n')
-            if len(args) > 1:
-                showerror(
-                    "Argument Error", "Only one argument allowed for now, sorry for your inconvenience"
-                )
-                root.destroy()
-            else:
-                for arg in args:
-                    command += f" {arg}"
-                system(file.read().strip('\n'))
+            system(file.read().strip('\n'))
     except RuntimeError:
         log('RuntimeError in function launch')
     except Exception as e:
@@ -187,7 +178,18 @@ def main():
         showerror(
             'Error', f'An error occurred in function main: {e}\nPlease raise an issue on GitHub')
 
-t = Thread(target=main)
-t.setDaemon(True)
-t.start()
-root.mainloop()
+
+if len(args) == 1:
+    with open('launch-command', 'r') as file:
+        command = file.read().strip("\n")
+        for arg in args:
+            command += f" {arg}"
+elif len(args) > 1:
+    showerror(
+        "Argument Error", "Only one argument allowed for now, sorry for your inconvenience"
+    )
+else:
+    t = Thread(target=main)
+    t.setDaemon(True)
+    t.start()
+    root.mainloop()
