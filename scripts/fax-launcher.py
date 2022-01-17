@@ -187,7 +187,7 @@ if len(args) == 1:
         system(command)
 elif len(args) > 1:
     print(
-        "Argument Error: Only one argument allowed for now, sorry for your inconvenience"
+        "Argument Error: Only one argument allowed for now, sorry for your inconvenience!"
     )
 else:
     t = Thread(target=main)
