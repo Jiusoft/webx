@@ -11,6 +11,7 @@ from datetime import datetime
 from os.path import exists
 from os import remove, system
 import platform
+import sys
 
 if exists('version'):
     with open('version', 'r') as f:
@@ -18,6 +19,7 @@ if exists('version'):
 else:
     version = ''
 
+args = sys.argv[1:]
 linux = platform.system() == 'Linux'
 windows = platform.system() == 'Windows'
 root = tk.Tk()
@@ -151,7 +153,16 @@ def launch():
         if not exists('launch-command'):
             fetch_launch_command()
         with open('launch-command', 'r') as file:
-            system(file.read().strip('\n'))
+            command = file.read().strip('\n')
+            if len(args) > 1:
+                showerror(
+                    "Argument Error", "Only one argument allowed for now, sorry for your inconvenience"
+                )
+                root.destroy()
+            else:
+                for arg in args:
+                    command += f" {arg}"
+                system(file.read().strip('\n'))
     except RuntimeError:
         log('RuntimeError in function launch')
     except Exception as e:
