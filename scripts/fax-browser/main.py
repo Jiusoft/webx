@@ -538,6 +538,8 @@ Arguments Available:
     2. -v, -V, or --version
 GitHub Page:
     https://github.com/jiusoft/fax-browser/
+Official Website:
+    https://fax.jiu-soft.com/
 Copyright:
     Jiusoft""")
 else:
