@@ -532,16 +532,14 @@ class MainWindow(QMainWindow):
 if "-v" in args or "-V" in args or "--version" in args:
     print(version)
 elif "-h" in args or "--help" in args:
-    print(f"""
-Version: {version}
+    print(f"""Version: {version}
 Arguments Available:
     1. -h or --help
     2. -v, -V, or --version
 GitHub Page:
     https://github.com/jiusoft/fax-browser/
 Copyright:
-    Jiusoft
-    """)
+    Jiusoft""")
 else:
     print("""
     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
