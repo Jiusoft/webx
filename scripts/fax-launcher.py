@@ -184,9 +184,10 @@ if len(args) == 1:
         command = file.read().strip("\n")
         for arg in args:
             command += f" {arg}"
+        system(command)
 elif len(args) > 1:
-    showerror(
-        "Argument Error", "Only one argument allowed for now, sorry for your inconvenience"
+    print(
+        "Argument Error: Only one argument allowed for now, sorry for your inconvenience"
     )
 else:
     t = Thread(target=main)
