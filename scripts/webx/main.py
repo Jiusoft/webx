@@ -1,5 +1,5 @@
 """
-Original repository link: https://github.com/Jiusoft/fax-browser
+Original repository link: https://github.com/Jiusoft/webx
 """
 # Importing Libraries This Browser Needs
 import sys
@@ -144,7 +144,7 @@ class MainWindow(QMainWindow):
         self.show()
 
         # Setting the Application icon
-        self.setWindowIcon(QIcon('img/FAX.png'))
+        self.setWindowIcon(QIcon('img/WebX.png'))
 
         # Menubar
         # Open HTML file
@@ -162,8 +162,8 @@ class MainWindow(QMainWindow):
         exitAction.setShortcut('Ctrl+Shift+Q')
         exitAction.triggered.connect(self.exit)
 
-        # About FAX
-        aboutAction = QAction('&About FAX', self)
+        # About WebX
+        aboutAction = QAction('&About WebX', self)
         aboutAction.setShortcut('F1')
         aboutAction.triggered.connect(self.about)
 
@@ -246,14 +246,14 @@ class MainWindow(QMainWindow):
         MainWindow()
 
     def about(self):
-        aboutfax = QMessageBox()
-        aboutfax.setWindowTitle("About")
-        aboutfax.setText(f"""FAX Version {version}
+        aboutwebx = QMessageBox()
+        aboutwebx.setWindowTitle("About")
+        aboutwebx.setText(f"""WebX Version {version}
 
 © The Jiusoft Team. All rights reserved.""")
-        aboutfax.setIcon(QMessageBox.Information)
-        aboutfax.setWindowIcon(QIcon('img/FAX.png'))
-        x = aboutfax.exec_()
+        aboutwebx.setIcon(QMessageBox.Information)
+        aboutwebx.setWindowIcon(QIcon('img/WebX.png'))
+        x = aboutwebx.exec_()
 
     def newtab(self, *args, qurl=None, label="about:blank"):
         if qurl is None:
@@ -276,7 +276,7 @@ class MainWindow(QMainWindow):
                 request, browser
             )
         )
-        browser.page().profile().setHttpUserAgent(f'FAX/{version}')
+        browser.page().profile().setHttpUserAgent(f'WebX/{version}')
         browser.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
 
     def handle_fullscreen_requested(self, request):
@@ -316,16 +316,16 @@ class MainWindow(QMainWindow):
     def navigatetourl(self):
         url = QUrl(self.urlbar.text())
         if self.urlbar.text() == "chrome:dino" or self.urlbar.text() == "chrome://dino":
-            self.urlbar.setText("fax://snake")
-        if self.urlbar.text() == "fax:history" or self.urlbar.text() == "fax://history":
+            self.urlbar.setText("webx://snake")
+        if self.urlbar.text() == "webx:history" or self.urlbar.text() == "webx://history":
             url = QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html")
-        if self.urlbar.text() == "fax:home" or self.urlbar.text() == "fax://home":
+        if self.urlbar.text() == "webx:home" or self.urlbar.text() == "webx://home":
             url = QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html")
-        if self.urlbar.text() == "fax:bookmarks" or self.urlbar.text() == "fax://bookmarks":
+        if self.urlbar.text() == "webx:bookmarks" or self.urlbar.text() == "webx://bookmarks":
             url = QUrl.fromLocalFile(f"{os.getcwd()}/bookmarks/bookmarks.html")
-        if self.urlbar.text() == "fax:links" or self.urlbar.text() == "fax://links":
+        if self.urlbar.text() == "webx:links" or self.urlbar.text() == "webx://links":
             url = QUrl.fromLocalFile(f"{os.getcwd()}/links/links.html")
-        if self.urlbar.text() == "fax:snake" or self.urlbar.text() == "fax://snake":
+        if self.urlbar.text() == "webx:snake" or self.urlbar.text() == "webx://snake":
             url = QUrl.fromLocalFile(f"{os.getcwd()}/snake_game/snake.html")
         if url.scheme() == "":
             url.setScheme("https")
@@ -353,45 +353,45 @@ class MainWindow(QMainWindow):
 
         if url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html").toString():
             try:
-                self.urlbar.setText("fax://history")
+                self.urlbar.setText("webx://history")
                 self.history_c.execute(
-                    f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'fax://history')")
+                    f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'webx://history')")
                 self.history_conn.commit()
             except:
                 print(
                     "Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
         elif url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/snake_game/snake.html").toString():
             try:
-                self.urlbar.setText("fax://snake")
+                self.urlbar.setText("webx://snake")
                 self.history_c.execute(
-                    f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'fax://snake')")
+                    f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'webx://snake')")
                 self.history_conn.commit()
             except:
                 print(
                     "Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
         elif url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html").toString() or self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html").toString() + "?":
             try:
-                self.urlbar.setText("fax://home")
+                self.urlbar.setText("webx://home")
                 self.history_c.execute(
-                    f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'fax://home')")
+                    f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'webx://home')")
                 self.history_conn.commit()
             except:
                 print(
                     "Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
         elif url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/links/links.html").toString():
             try:
-                self.urlbar.setText("fax://links")
+                self.urlbar.setText("webx://links")
                 self.history_c.execute(
-                    f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'fax://links')")
+                    f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'webx://links')")
                 self.history_conn.commit()
             except:
                 print(
                     "Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
         elif url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/bookmarks/bookmarks.html").toString():
             try:
-                self.urlbar.setText("fax://bookmarks")
+                self.urlbar.setText("webx://bookmarks")
                 self.history_c.execute(
-                    f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'fax://bookmarks')")
+                    f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'webx://bookmarks')")
                 self.history_conn.commit()
             except:
                 print(
@@ -428,8 +428,8 @@ class MainWindow(QMainWindow):
                 request, browser
             )
         )
-        self.urlbar.setText("fax://history")
-        browser.page().profile().setHttpUserAgent(f'FAX/{version}')
+        self.urlbar.setText("webx://history")
+        browser.page().profile().setHttpUserAgent(f'WebX/{version}')
         browser.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
 
     def removeHistory(self):
@@ -462,19 +462,19 @@ class MainWindow(QMainWindow):
 
         if self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/bookmarks/bookmarks.html").toString():
             self.bookmark_c.execute(
-                f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'fax://bookmarks')")
+                f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'webx://bookmarks')")
         elif self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html").toString():
             self.bookmark_c.execute(
-                f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'fax://history')")
+                f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'webx://history')")
         elif self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/snake_game/snake.html").toString():
             self.bookmark_c.execute(
-                f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'fax://snake')")
+                f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'webx://snake')")
         elif self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html").toString() or self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html").toString() + "?":
             self.bookmark_c.execute(
-                f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'fax://home')")
+                f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'webx://home')")
         elif self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/links/links.html").toString():
             self.bookmark_c.execute(
-                f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'fax://links')")
+                f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'webx://links')")
         else:
             self.bookmark_c.execute(
                 f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', '{self.url.toString()}')")
@@ -505,8 +505,8 @@ class MainWindow(QMainWindow):
                 request, browser
             )
         )
-        self.urlbar.setText("fax://bookmarks")
-        browser.page().profile().setHttpUserAgent(f'FAX/{version}')
+        self.urlbar.setText("webx://bookmarks")
+        browser.page().profile().setHttpUserAgent(f'WebX/{version}')
         browser.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
 
     def removeBookmarks(self):
@@ -537,48 +537,14 @@ Arguments Available:
     1. -h or --help
     2. -v, -V, or --version
 GitHub Page:
-    https://github.com/jiusoft/fax-browser/
+    https://github.com/jiusoft/webx/
 Official Website:
-    https://fax.jiu-soft.com/
+    https://webx.jiu-soft.com/
 Copyright:
     Jiusoft""")
 else:
-    print("""
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/((((((&@((((((((((@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @@@@@@@@@@@@@@@@@@@@@@&@((((((((((((@###@/((((((((((((((%@@@@@@@@@@@@@@@@@@@@@@@
-    @@@@@@@@@@@@@@@@@@@@/((((((((((((((@######&((((((((((((((((((@@@@@@@@@@@@@@@@@@@
-    @@@@@@@@@@@@@@@@@((((((((((((((((/@########@((((((((((((((((((((@@@@@@@@@@@@@@@@
-    @@@@@@@@@@@@@@((((((((((((((((((#%##########@(((((((((((((((((((((%&@@@@@@@@@@@@
-    @@@@@@@@@@@@/((((((((((((((((((@#############&#(((((((((((((((((((((#@@@@@@@@@@@
-    @@@@@@@@@@((((((((((((((((((((@################&((((((((((((((((((((((@@@@@@@@@@
-    @@@@@@@@@(((((((((((((((((((/@##################@(((((((((((((((((((((((&@@@@@@@
-    @@@@@@@&((((((((((((((((((((@########&&&&########@(((((((((((((((((((((((@@@@@@@
-    @@@@@@&((((((((((((((((((((@@@@@@@@@@@@@@@@@@@@@@@@#((((((((((((((((((((((@@@@@@
-    @@@@@@(((((((((((((((%@#(/@@@@@@@@@@@@@@@@@@@@@@@@@@(((%@%(((((((((((((((((@@@@@
-    @@@@@/((((((((((%@(((((((@@@@@@@@@@@@@@@@@@@@@@@@@@@&(((((((/@@((((((((((((#@@@@
-    @@@@@(((((((@&((((((((((@@@@@@@@@@@@@@  @@@@@@@@@@@@@((((((((((((/@@/(((((((@@@@
-    @@@@%((@@((((((((/ ((((/@@@@@@@@@@@@@ @  @@@@@@@@@@@@%((/ /(.(((((((((/@@/((@@@@
-    @@@@@@(((((((((((/ (( ((@@@@@@@@@@@@ @@@  @@@@@@@@@@@&((((. (((((((((((((((/@@@@
-    @@@@@(((/@@/(((((/ (((((@@@@@@@@@@@ @@@@@  @@@@@@@@@@&((**((  ((((((((&@%(((@@@@
-    @@@@&(((((((((@@((((((((@@@@@@@@@@ @@@@@@@  @@@@@@@@@#(((((((((((@@/(((((((//@@@
-    @@@@@%(((((((((((((#@&((%@@@@@@@@@@@@@@@@@@@@@@@@@@@&((((((@@/(((((((((((((@@@@@
-    @@@@@@(((((((((((((((((((@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&/((((((((((((((((((#@@@@@
-    @@@@@@@(((((((((((((((((((@.,,,,.*@@@@@@@@@@@@,.,,@((((((((((((((((((((((/@@@@@@
-    @@@@@@@@(((((((((((((((((((@,,,,,,,,,,,,,,,,,,,,,@(((((((((((((((((((((((@@@@@@@
-    @@@@@@@@@(((((((((((((((((((&*,,,,,,,,,,,,,,,,,,@((((((((((((((((((((((@@@@@@@@@
-    @@@@@@@@@@@((((((((((((((((((/@,,,,,,,,,,,,,,,,@((((((((((((((((((((((@@@@@@@@@@
-    @@@@@@@@@@@@@((((((((((((((((((@.,,,,,,,,,,,,*%(((((((((((((((((((((@@@@@@@@@@@@
-    @@@@@@@@@@@@@@@/((((((((((((((((#(,,,,,,,,,,@((((((((((((((((((((%&@@@@@@@@@@@@@
-    @@@@@@@@@@@@@@@@@@/(((((((((((((((@,,,,,,,.@(((((((((((((((((((@@@@@@@@@@@@@@@@@
-    @@@@@@@@@@@@@@@@@@@@@%(((((((((((((@*,,,,*%((((((((((((((((@&@@@@@@@@@@@@@@@@@@@
-    @@@@@@@@@@@@@@@@@@@@@@@@(@(((((((((((@,,@/((((((((((((&@@@@@@@@@@@@@@@@@@@@@@@@@
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#//&@((//(#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    """)
-    print("Thank you for using the Fax Browser!\n")
+    print("Thank you for using the WebX!\n")
     app = QApplication(path)
-    QApplication.setApplicationName('FAX')
+    QApplication.setApplicationName('WebX')
     window = MainWindow()
     app.exec_()

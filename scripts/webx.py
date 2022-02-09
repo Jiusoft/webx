@@ -1,5 +1,5 @@
 """
-Original repository link: https://github.com/Jiusoft/fax-browser
+Original repository link: https://github.com/Jiusoft/webx
 Author: Jothin kumar (https://jothin-kumar.github.io)
 """
 import tkinter as tk
@@ -27,7 +27,7 @@ root.overrideredirect(True)
 root.geometry(
     f'400x200+{int(root.winfo_screenwidth() / 2) - 200}+{int(root.winfo_screenheight() / 2 - 100)}')
 root.configure(background='green')
-tk.Label(master=root, text='FAX browser',
+tk.Label(master=root, text='WebX',
          font=('Ariel', 30), bg='green').pack()
 tk.Label(master=root, text='By Jiusoft', font=('Ariel', 20), bg='green').pack()
 progress_label = tk.Label(master=root, text='', font=('Ariel', 15), bg='green')
@@ -74,7 +74,7 @@ def check_for_updates():
         in_progress_msg('Checking for updates')
         log('Checking for updates')
         latest_version = get(
-            'https://cdn.jiu-soft.com/fax-browser/latest-version.txt').text.strip('\n')
+            'https://cdn.jiu-soft.com/webx/latest-version.txt').text.strip('\n')
         log(f'lv - {latest_version}')
         return latest_version != version, latest_version
     except RuntimeError:
@@ -92,10 +92,10 @@ def fetch_launch_command():
         with open('launch-command', 'wb') as file:
             if linux:
                 file.write(
-                    get('https://cdn.jiu-soft.com/fax-browser/launch-command-linux.txt', allow_redirects=True).content)
+                    get('https://cdn.jiu-soft.com/webx/launch-command-linux.txt', allow_redirects=True).content)
             elif windows:
                 file.write(
-                    get('https://cdn.jiu-soft.com/fax-browser/launch-command-windows.txt', allow_redirects=True).content)
+                    get('https://cdn.jiu-soft.com/webx/launch-command-windows.txt', allow_redirects=True).content)
         log('Launch command fetched')
     except RuntimeError:
         log('RuntimeError in function fetch_launch_command')
@@ -112,10 +112,10 @@ def download_update(latest_version):
         with open('update_temp.zip', 'wb') as file:
             if linux:
                 file.write(get(
-                    'https://cdn.jiu-soft.com/fax-browser/fax-browser-files-linux.zip', allow_redirects=True).content)
+                    'https://cdn.jiu-soft.com/webx/webx-files-linux.zip', allow_redirects=True).content)
             elif windows:
                 file.write(get(
-                    'https://cdn.jiu-soft.com/fax-browser/fax-browser-files-windows.zip', allow_redirects=True).content)
+                    'https://cdn.jiu-soft.com/webx/webx-files-windows.zip', allow_redirects=True).content)
         fetch_launch_command()
         with open('version', 'w') as file:
             file.write(latest_version)
@@ -134,7 +134,7 @@ def install_update():
         log('Installing update')
         import zipfile
         zip_file = zipfile.ZipFile('update_temp.zip', 'r')
-        zip_file.extractall('fax-browser')
+        zip_file.extractall('webx')
         zip_file.close()
         remove('update_temp.zip')
         log('Update installed')
