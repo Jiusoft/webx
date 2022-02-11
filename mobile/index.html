@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8" />
         <title>WebX - Jiusoft</title>
         <script
             src="https://kit.fontawesome.com/6338eea7b6.js"
             crossorigin="anonymous"
         ></script>
         <link rel="shortcut icon" href="/images/webx.png" />
+        <meta charset="UTF-8" />
+        <meta name="description" content="Fax Browser is a browser built on PyQt5. " />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <script>
             function makesureuserisnotonpc(){
 				if(!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
-					window.location.replace("/")
+					window.location.replace("/");
 				}
+                else if (window.location.protocol !== "https:") {
+                    let currenturl = window.location.href.slice(window.location.protocol.length + 2);
+                    window.location.replace("https://" + currenturl)
+                }
 			}
         </script>
         <style>
