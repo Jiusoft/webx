@@ -114,20 +114,10 @@ class MainWindow(QMainWindow):
 
         # URL Bar
         self.urlbar = QLineEdit()
-        self.urlbar.returnPressed.connect(self.navigatetourl)
+        self.urlbar.setPlaceholderText("Type a url or Search")
+        self.urlbar.setToolTip("To go to a url, just type the url; To search, please type \"?\" and a space before your query")
+        self.urlbar.returnPressed.connect(self.detectsearch)
         navbar.addWidget(self.urlbar)
-
-        # Adding a separator
-        navbar.addSeparator()
-
-        # Adding a search label and search box
-        Searchlabel = QLabel()
-        Searchlabel.setText("Search ")
-        navbar.addWidget(Searchlabel)
-        self.searchbox = QLineEdit()
-        self.searchbox.returnPressed.connect(self.doasearch)
-        self.searchbox.setFixedWidth(300)
-        navbar.addWidget(self.searchbox)
 
         # Adding a separator
         navbar.addSeparator()
@@ -194,6 +184,7 @@ class MainWindow(QMainWindow):
         # Seting Up Menubar
         global menubar
         menubar = self.menuBar()
+        menubar.setContextMenuPolicy(Qt.PreventContextMenu)
         fileMenu = menubar.addMenu('&File')
         fileMenu.addAction(openfile)
         fileMenu.addAction(newwinAction)
@@ -212,6 +203,13 @@ class MainWindow(QMainWindow):
         helpMenu.addAction(aboutAction)
 
     # Defining things
+    def detectsearch(self):
+        urlorquery = self.urlbar.text()
+        if not urlorquery.startswith("? "):
+            self.navigatetourl()
+        else:
+            self.doasearch()
+
     def openfile(self):
         if platform.system() == "Linux" or platform.system() == "Darwin":
             filepath = QFileDialog.getOpenFileName(
@@ -231,10 +229,36 @@ class MainWindow(QMainWindow):
             self.showMaximized()
 
     def doasearch(self):
-        keyword = self.searchbox.text()
-        url = QUrl("https://duckduckgo.com/?q=" + keyword)
+        keyword = self.urlbar.text()[2:]
+        if QUrl(keyword).scheme() == "":
+            url = QUrl("https://duckduckgo.com/?q=" + keyword)
+        elif QUrl(keyword).scheme() == "g":
+            url = QUrl("https://google.com/search?q=" + keyword[2:])
+        elif QUrl(keyword).scheme() == "google":
+            url = QUrl("https://google.com/search?q=" + keyword[7:])
+        elif QUrl(keyword).scheme() == "b":
+            url = QUrl("https://bing.com/search?q=" + keyword[2:])
+        elif QUrl(keyword).scheme() == "bing":
+            url = QUrl("https://bing.com/search?q=" + keyword[5:])
+        elif QUrl(keyword).scheme() == "y":
+            url = QUrl("https://search.yahoo.com/search?p=" + keyword[2:])
+        elif QUrl(keyword).scheme() == "yahoo":
+            url = QUrl("https://search.yahoo.com/search?p=" + keyword[6:])
+        elif QUrl(keyword).scheme() == "ddg":
+            url = QUrl("https://duckduckgo.com/?q=" + keyword[4:])
+        elif QUrl(keyword).scheme() == "duckduckgo":
+            url = QUrl("https://duckduckgo.com/?q=" + keyword[11:])
+        elif QUrl(keyword).scheme() == "sp":
+            url = QUrl("https://www.startpage.com/sp/search?query=" + keyword[3:] + "&cat=web&pl=opensearch&language=english")
+        elif QUrl(keyword).scheme() == "startpage":
+            url = QUrl("https://www.startpage.com/sp/search?query=" + keyword[10:] + "&cat=web&pl=opensearch&language=english")
+        elif QUrl(keyword).scheme() == "aiu":
+            url = QUrl("https://jiu-soft.com/aiu/nonav.html?q=" + keyword[4:])
+        elif QUrl(keyword).scheme() == "yt":
+            url = QUrl("https://www.youtube.com/results?search_query=" + keyword[3:])
+        elif QUrl(keyword).scheme() == "youtube":
+            url = QUrl("https://www.youtube.com/results?search_query=" + keyword[8:])
         self.tabs.currentWidget().setUrl(url)
-        self.searchbox.clear()
         browser.setFocus()
 
     def exit(self):
@@ -371,7 +395,7 @@ class MainWindow(QMainWindow):
                     "Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
         elif url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html").toString() or self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html").toString() + "?":
             try:
-                self.urlbar.setText("webx://home")
+                self.urlbar.setText("")
                 self.history_c.execute(
                     f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'webx://home')")
                 self.history_conn.commit()
