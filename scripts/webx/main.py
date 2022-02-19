@@ -39,6 +39,13 @@ except:
 
 version = "1.0.0"
 
+class ListWidget(QListWidget):
+    def doubleClicked(self, item):
+        current = item.text()
+        # database things for removing bookmarks
+        listWidget.takeItem(self.row(item))
+
+listWidget = ListWidget()
 
 class WebEnginePage(QWebEnginePage):
     def createWindow(self, _type):
@@ -581,7 +588,7 @@ Official Website:
 Copyright:
     Jiusoft""")
 else:
-    print("Thank you for using the WebX!\n")
+    print("Thank you for using the WebX!")
     app = QApplication(path)
     QApplication.setApplicationName('WebX')
     window = MainWindow()
