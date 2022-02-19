@@ -39,11 +39,24 @@ except:
 
 version = "1.0.0"
 
+
 class ListWidget(QListWidget):
     def doubleClicked(self, item):
+        bookmark_conn = sqlite3.connect("bookmarks/bookmarks.db")
+        bookmark_c = bookmark_conn.cursor()
+
         current = item.text()
         # database things for removing bookmarks
         listWidget.takeItem(self.row(item))
+
+        # print(current)
+        bookmark_c.execute(f"DELETE FROM bookmark WHERE link='{current}'")
+
+        bookmark_conn.commit()
+        bookmark_conn.close()
+
+        compile_sqlte3_to_html_bookmark()
+
 
 class WebEnginePage(QWebEnginePage):
     def createWindow(self, _type):
@@ -210,10 +223,10 @@ class MainWindow(QMainWindow):
 
     # Defining things
     def fetchBookmarks(self):
-        self.bookmark_c.execute("SELECT * FROM bookmark")
+        self.bookmark_c.execute("SELECT DISTINCT link FROM bookmark ORDER BY date DESC")
         bookmarks = []
         for bookmark in self.bookmark_c.fetchall():
-            page = bookmark[1]
+            page = bookmark[0]
             bookmarks.append(page)
         return bookmarks
 
@@ -562,7 +575,7 @@ class MainWindow(QMainWindow):
         listWidget.setWindowTitle("Remove Bookmark")
         listWidget.itemDoubleClicked.connect(listWidget.doubleClicked)
         listWidget.show()
-    
+
 
 # Executing The Browser
 if "-v" in args or "-V" in args or "--version" in args:
