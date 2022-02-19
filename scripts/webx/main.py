@@ -558,6 +558,11 @@ class MainWindow(QMainWindow):
 
         compile_sqlte3_to_html_bookmark()
 
+    # For upcoming features
+    def fetchBookmarks(self):
+        self.bookmark_c.execute("SELECT * FROM bookmark")
+        bookmarks = self.bookmark_c.fetchall()
+        return bookmarks
 
 # Executing The Browser
 if "-v" in args or "-V" in args or "--version" in args:
