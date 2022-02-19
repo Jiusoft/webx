@@ -45,8 +45,6 @@ class ListWidget(QListWidget):
         # database things for removing bookmarks
         listWidget.takeItem(self.row(item))
 
-listWidget = ListWidget()
-
 class WebEnginePage(QWebEnginePage):
     def createWindow(self, _type):
         page = WebEnginePage(self)
@@ -175,7 +173,7 @@ class MainWindow(QMainWindow):
         openBookmarksAction.triggered.connect(self.openBookmarks)
 
         # Clear Bookmarks
-        clearBookmarksAction = QAction("&Delete All Bookmarks", self)
+        clearBookmarksAction = QAction("&Delete Bookmark", self)
         clearBookmarksAction.triggered.connect(self.removeBookmarks)
 
         # History
@@ -210,6 +208,14 @@ class MainWindow(QMainWindow):
         helpMenu.addAction(aboutAction)
 
     # Defining things
+    def fetchBookmarks(self):
+        self.bookmark_c.execute("SELECT * FROM bookmark")
+        bookmarks = []
+        for bookmark in self.bookmark_c.fetchall():
+            page = bookmark[1]
+            bookmarks.append(page)
+        return bookmarks
+
     def detectsearch(self):
         urlorquery = self.urlbar.text()
         if not urlorquery.startswith("? "):
@@ -541,28 +547,16 @@ class MainWindow(QMainWindow):
         browser.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
 
     def removeBookmarks(self):
-        self.bookmark_conn.commit()
-        self.bookmark_conn.close()
-
-        os.remove("bookmarks/bookmarks.db")
-
-        try:
-            self.bookmark_conn = sqlite3.connect("bookmarks/bookmarks.db")
-            self.bookmark_c = self.bookmark_conn.cursor()
-
-            self.bookmark_c.execute(
-                "CREATE TABLE IF NOT EXISTS bookmark(date datetime, link text)")
-        except:
-            print(
-                "Cannot access file \"bookmarks.db\"; most likely because of a wrong directory error.")
-
-        compile_sqlte3_to_html_bookmark()
-
-    # For upcoming features
-    def fetchBookmarks(self):
-        self.bookmark_c.execute("SELECT * FROM bookmark")
-        bookmarks = self.bookmark_c.fetchall()
-        return bookmarks
+        global listWidget
+        listWidget = ListWidget()
+        listWidget.resize(300, 120)
+        bms = self.fetchBookmarks()
+        for bm in bms:
+            listWidget.addItem(bm)
+        listWidget.setWindowTitle("Remove Bookmark")
+        listWidget.itemDoubleClicked.connect(listWidget.doubleClicked)
+        listWidget.show()
+    
 
 # Executing The Browser
 if "-v" in args or "-V" in args or "--version" in args:
