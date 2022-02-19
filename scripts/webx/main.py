@@ -325,6 +325,7 @@ class MainWindow(QMainWindow):
                                    self.updateurl(qurl, browser))
         browser.loadFinished.connect(lambda _, i=i, browser=browser:
                                      self.tabs.setTabText(i, browser.page().title()))
+        browser.loadFinished.connect(self.updatetitle)
         browser.page().profile().downloadRequested.connect(download_file)
         browser.page().fullScreenRequested.connect(
             lambda request, browser=browser: self.handle_fullscreen_requested(
@@ -462,6 +463,9 @@ class MainWindow(QMainWindow):
 
         if browser != self.tabs.currentWidget():
             return
+
+    def updatetitle(self):
+        self.setWindowTitle("%s – WebX" % self.tabs.tabText(self.tabs.currentIndex()))
 
     def checkHistory(self):
         current = os.getcwd()
