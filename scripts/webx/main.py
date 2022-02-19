@@ -115,7 +115,8 @@ class MainWindow(QMainWindow):
         # URL Bar
         self.urlbar = QLineEdit()
         self.urlbar.setPlaceholderText("Type a url or Search")
-        self.urlbar.setToolTip("To go to a url, just type the url; To search, please type \"?\" and a space before your query")
+        self.urlbar.setToolTip(
+            "To go to a url, just type the url; To search, please type \"?\" and a space before your query")
         self.urlbar.returnPressed.connect(self.detectsearch)
         navbar.addWidget(self.urlbar)
 
@@ -249,15 +250,19 @@ class MainWindow(QMainWindow):
         elif QUrl(keyword).scheme() == "duckduckgo":
             url = QUrl("https://duckduckgo.com/?q=" + keyword[11:])
         elif QUrl(keyword).scheme() == "sp":
-            url = QUrl("https://www.startpage.com/sp/search?query=" + keyword[3:] + "&cat=web&pl=opensearch&language=english")
+            url = QUrl("https://www.startpage.com/sp/search?query=" +
+                       keyword[3:] + "&cat=web&pl=opensearch&language=english")
         elif QUrl(keyword).scheme() == "startpage":
-            url = QUrl("https://www.startpage.com/sp/search?query=" + keyword[10:] + "&cat=web&pl=opensearch&language=english")
+            url = QUrl("https://www.startpage.com/sp/search?query=" +
+                       keyword[10:] + "&cat=web&pl=opensearch&language=english")
         elif QUrl(keyword).scheme() == "aiu":
             url = QUrl("https://jiu-soft.com/aiu/nonav.html?q=" + keyword[4:])
         elif QUrl(keyword).scheme() == "yt":
-            url = QUrl("https://www.youtube.com/results?search_query=" + keyword[3:])
+            url = QUrl(
+                "https://www.youtube.com/results?search_query=" + keyword[3:])
         elif QUrl(keyword).scheme() == "youtube":
-            url = QUrl("https://www.youtube.com/results?search_query=" + keyword[8:])
+            url = QUrl(
+                "https://www.youtube.com/results?search_query=" + keyword[8:])
         self.tabs.currentWidget().setUrl(url)
         browser.setFocus()
 
@@ -333,7 +338,8 @@ class MainWindow(QMainWindow):
 
     def closetab(self, i):
         if self.tabs.count() < 2:
-            self.tabs.currentWidget().setUrl(QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html"))
+            self.tabs.currentWidget().setUrl(
+                QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html"))
         else:
             self.tabs.removeTab(i)
 
@@ -425,7 +431,7 @@ class MainWindow(QMainWindow):
                 self.history_c.execute(
                     f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', '{str(url.toString())}')")
                 self.history_conn.commit()
-        
+
         compile_sqlte3_to_html_history()
 
         if browser != self.tabs.currentWidget():
@@ -551,11 +557,14 @@ class MainWindow(QMainWindow):
 
         compile_sqlte3_to_html_bookmark()
 
-    # For upcoming features
     def fetchBookmarks(self):
         self.bookmark_c.execute("SELECT * FROM bookmark")
         bookmarks = self.bookmark_c.fetchall()
-        return bookmarks
+        bookmark_names = []
+        for bookmark in bookmarks:
+            bookmark_names.append(bookmark[1])
+        return bookmark_names
+
 
 # Executing The Browser
 if "-v" in args or "-V" in args or "--version" in args:
