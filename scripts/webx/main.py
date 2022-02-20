@@ -163,6 +163,7 @@ class MainWindow(QMainWindow):
 
         # Open PDF file
         openpdffile = QAction('Open &PDF File', self)
+        openpdffile.setShortcut('Ctrl+Shift+P')
         openpdffile.triggered.connect(self.openpdffile)
 
         # New Window
@@ -191,8 +192,9 @@ class MainWindow(QMainWindow):
         openBookmarksAction.triggered.connect(self.openBookmarks)
 
         # Clear Bookmarks
-        clearBookmarksAction = QAction("&Delete Bookmark", self)
-        clearBookmarksAction.triggered.connect(self.removeBookmarks)
+        clearBookmarkAction = QAction("&Delete Bookmark", self)
+        clearBookmarkAction.setShortcut('Ctrl+Shift+V')
+        clearBookmarkAction.triggered.connect(self.removeBookmarks)
 
         # History
         historyAction = QAction("&View Browsing History", self)
@@ -217,7 +219,7 @@ class MainWindow(QMainWindow):
         bookmarkManagerMenu = menubar.addMenu('&Bookmarks')
         bookmarkManagerMenu.addAction(bookmarkAction)
         bookmarkManagerMenu.addAction(openBookmarksAction)
-        bookmarkManagerMenu.addAction(clearBookmarksAction)
+        bookmarkManagerMenu.addAction(clearBookmarkAction)
 
         historyMenu = menubar.addMenu('&History')
         historyMenu.addAction(historyAction)
