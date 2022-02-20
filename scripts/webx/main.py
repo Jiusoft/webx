@@ -134,7 +134,7 @@ class MainWindow(QMainWindow):
         self.urlbar = QLineEdit()
         self.urlbar.setPlaceholderText("Type a url or Search")
         self.urlbar.setToolTip(
-            "To go to a url, just type the url; To search, please type \"?\" and a space before your query")
+            "To go to a url, just type the url;\nTo search, please type \"?\" and a space before your query")
         self.urlbar.returnPressed.connect(self.detectsearch)
         navbar.addWidget(self.urlbar)
 
@@ -157,9 +157,13 @@ class MainWindow(QMainWindow):
 
         # Menubar
         # Open HTML file
-        openfile = QAction('&Open', self)
-        openfile.setShortcut('Ctrl+O')
-        openfile.triggered.connect(self.openfile)
+        openhtmlfile = QAction('Open &HTML File', self)
+        openhtmlfile.setShortcut('Ctrl+O')
+        openhtmlfile.triggered.connect(self.openhtmlfile)
+
+        # Open PDF file
+        openpdffile = QAction('Open &PDF File', self)
+        openpdffile.triggered.connect(self.openpdffile)
 
         # New Window
         newwinAction = QAction('&New Window', self)
@@ -205,7 +209,8 @@ class MainWindow(QMainWindow):
         menubar = self.menuBar()
         menubar.setContextMenuPolicy(Qt.PreventContextMenu)
         fileMenu = menubar.addMenu('&File')
-        fileMenu.addAction(openfile)
+        fileMenu.addAction(openhtmlfile)
+        fileMenu.addAction(openpdffile)
         fileMenu.addAction(newwinAction)
         fileMenu.addAction(exitAction)
 
@@ -237,7 +242,7 @@ class MainWindow(QMainWindow):
         else:
             self.doasearch()
 
-    def openfile(self):
+    def openhtmlfile(self):
         if platform.system() == "Linux" or platform.system() == "Darwin":
             filepath = QFileDialog.getOpenFileName(
                 None, "Open File", "/", "HTML Files (*.htm, *.html)")
@@ -248,6 +253,18 @@ class MainWindow(QMainWindow):
         filepath2str = filepath2str[2:-32]
         if not filepath2str == "":
             self.newtab(qurl=QUrl(f"file:{filepath2str}"))
+
+    def openpdffile(self):
+        if platform.system() == "Linux" or platform.system() == "Darwin":
+            filepath = QFileDialog.getOpenFileName(
+                None, "Open File", "/", "PDF Files (*.pdf)")
+        else:
+            filepath = QFileDialog.getOpenFileName(
+                None, "Open File", "C:\\", "PDF Files (*.pdf)")
+        filepath2str = str(filepath)
+        filepath2str = filepath2str[2:-23]
+        if not filepath2str == "":
+            self.newtab(qurl=QUrl(f"chrome-extension://mhjfbmdgcfjbbpaeojofohoefgiehjai/index.html?file://{filepath2str}"))
 
     def maximize(self):
         if self.isMaximized():
@@ -323,8 +340,9 @@ class MainWindow(QMainWindow):
         self.tabs.setCurrentIndex(i)
         browser.urlChanged.connect(lambda qurl, browser=browser:
                                    self.updateurl(qurl, browser))
-        browser.loadFinished.connect(lambda _, i=i, browser=browser:
-                                     self.tabs.setTabText(i, browser.page().title()))
+        if not qurl.toString().startswith("chrome-extension://mhjfbmdgcfjbbpaeojofohoefgiehjai/index.html"):
+            browser.loadFinished.connect(lambda _, i=i, browser=browser:
+                                        self.tabs.setTabText(i, browser.page().title()))
         browser.loadFinished.connect(self.updatetitle)
         browser.page().profile().downloadRequested.connect(download_file)
         browser.page().fullScreenRequested.connect(
@@ -334,6 +352,7 @@ class MainWindow(QMainWindow):
         )
         browser.page().profile().setHttpUserAgent(f'WebX/{version}')
         browser.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
+        browser.settings().setAttribute(QWebEngineSettings.PluginsEnabled, True)
 
     def handle_fullscreen_requested(self, request):
         request.accept()
@@ -358,10 +377,11 @@ class MainWindow(QMainWindow):
     def openatab(self, i):
         if i == -1:
             self.newtab()
-
+    
     def tabchanged(self, i):
         qurl = self.tabs.currentWidget().url()
         self.updateurl(qurl, self.tabs.currentWidget())
+        self.updatetitle()
 
     def closetab(self, i):
         if self.tabs.count() < 2:
@@ -376,7 +396,7 @@ class MainWindow(QMainWindow):
             self.urlbar.setText("webx://snake")
         if self.urlbar.text() == "webx:history" or self.urlbar.text() == "webx://history":
             url = QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html")
-        if self.urlbar.text() == "webx:home" or self.urlbar.text() == "webx://home":
+        if self.urlbar.text() == "webx:home" or self.urlbar.text() == "webx://home" or self.urlbar.text() == "":
             url = QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html")
         if self.urlbar.text() == "webx:bookmarks" or self.urlbar.text() == "webx://bookmarks":
             url = QUrl.fromLocalFile(f"{os.getcwd()}/bookmarks/bookmarks.html")
@@ -449,6 +469,17 @@ class MainWindow(QMainWindow):
                 self.urlbar.setText("webx://bookmarks")
                 self.history_c.execute(
                     f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'webx://bookmarks')")
+                self.history_conn.commit()
+            except:
+                print(
+                    "Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
+        elif url.toString().startswith("chrome-extension://mhjfbmdgcfjbbpaeojofohoefgiehjai/index.html"):
+            try:
+                self.urlbar.setText("pdf" + url.toString()[67:])
+                self.tabs.setTabText(self.tabs.currentIndex(), "PDF Reader")
+                self.history_c.execute(
+                    f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}-{minute}-{second}', 'pdf://{url.toString()[67:]}')"
+                )
                 self.history_conn.commit()
             except:
                 print(
@@ -597,6 +628,7 @@ Copyright:
     Jiusoft""")
 else:
     print("Thank you for using the WebX!")
+    os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--disable-logging"
     app = QApplication(path)
     QApplication.setApplicationName('WebX')
     window = MainWindow()
