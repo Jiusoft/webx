@@ -2,6 +2,7 @@
 Original repository link: https://github.com/Jiusoft/webx
 """
 # Importing Libraries This Browser Needs
+from contextlib import contextmanager
 import sys
 import platform
 from PyQt5.QtCore import *
@@ -39,6 +40,15 @@ except:
 
 version = "1.0.0"
 
+@contextmanager
+def suppress_stdout():
+    with open(os.devnull, "w") as devnull:
+        old_stdout = sys.stdout
+        sys.stdout = devnull
+        try:  
+            yield
+        finally:
+            sys.stdout = old_stdout
 
 class ListWidget(QListWidget):
     def doubleClicked(self, item):
@@ -353,6 +363,7 @@ class MainWindow(QMainWindow):
         browser.page().profile().setHttpUserAgent(f'WebX/{version}')
         browser.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
         browser.settings().setAttribute(QWebEngineSettings.PluginsEnabled, True)
+        browser.settings().setAttribute(QWebEngineSettings.PlaybackRequiresUserGesture, True)
 
     def handle_fullscreen_requested(self, request):
         request.accept()
@@ -478,7 +489,7 @@ class MainWindow(QMainWindow):
                 self.urlbar.setText("pdf" + url.toString()[67:])
                 self.tabs.setTabText(self.tabs.currentIndex(), "PDF Reader")
                 self.history_c.execute(
-                    f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}-{minute}-{second}', 'pdf://{url.toString()[67:]}')"
+                    f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}-{minute}-{second}', 'pdf{url.toString()[67:]}')"
                 )
                 self.history_conn.commit()
             except:
@@ -628,7 +639,7 @@ Copyright:
     Jiusoft""")
 else:
     print("Thank you for using the WebX!")
-    os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--disable-logging"
+    os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "-- enable-logging --log-level=3 --ignore-certificate-errors --ignore-ssl-errors"
     app = QApplication(path)
     QApplication.setApplicationName('WebX')
     window = MainWindow()
