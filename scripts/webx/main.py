@@ -664,6 +664,7 @@ Copyright:
 	Jiusoft""")
 else:
 	print("Thank you for using the WebX!")
+	os.environ["QT_QPA_PLATFORM"] = "xcb"
 	os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "-- enable-logging --log-level=3 --ignore-certificate-errors --ignore-ssl-errors"
 	app = QApplication(path)
 	QApplication.setApplicationName('WebX')
