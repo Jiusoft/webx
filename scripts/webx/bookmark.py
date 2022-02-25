@@ -3,10 +3,11 @@ Original repository link: https://github.com/Jiusoft/fax-browser
 """
 import pandas as pd
 import sqlite3
+import os
 
 def compile_sqlte3_to_html_bookmark():
     try:
-        conn = sqlite3.connect('bookmarks/bookmarks.db')
+        conn = sqlite3.connect(f'{os.path.dirname(os.path.realpath(__file__))}/bookmarks/bookmarks.db')
     except:
         print(
             "Cannot access file \"search_history.db\"; most likely because of a wrong directory error.")
@@ -15,7 +16,7 @@ def compile_sqlte3_to_html_bookmark():
 
     df = pd.read_sql_query(query, conn)
 
-    with open("bookmarks/bookmarks.html", "w") as bookmarks:
+    with open(f"{os.path.dirname(os.path.realpath(__file__))}/bookmarks/bookmarks.html", "w") as bookmarks:
         bookmarks.write("<head><title>Bookmarks</title><link rel=\"stylesheet\" href=\"bookmarks_styles.css\"></head><h1>Bookmarks</h1>")
         bookmarks.write(df.to_html(index=None))
         

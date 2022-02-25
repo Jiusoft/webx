@@ -21,14 +21,14 @@ args = sys.argv[1:]
 
 # Setting Up This Browser
 try:
-	history_conn = sqlite3.connect("history/search_history.db")
+	history_conn = sqlite3.connect(f"{os.path.dirname(os.path.realpath(__file__))}/history/search_history.db")
 	history_c = history_conn.cursor()
 	history_c.execute(
 		"CREATE TABLE IF NOT EXISTS history(date date, time time, link text)")
 	history_conn.commit()
 	history_conn.close()
 
-	bookmark_conn = sqlite3.connect("bookmarks/bookmarks.db")
+	bookmark_conn = sqlite3.connect(f"{os.path.dirname(os.path.realpath(__file__))}/bookmarks/bookmarks.db")
 	bookmark_c = bookmark_conn.cursor()
 	bookmark_c.execute(
 		"CREATE TABLE IF NOT EXISTS bookmark(date datetime, link text)")
@@ -103,10 +103,10 @@ class MainWindow(QMainWindow):
 		self.setCentralWidget(self.tabs)
 
 		try:
-			self.history_conn = sqlite3.connect("history/search_history.db")
+			self.history_conn = sqlite3.connect(f"{os.path.dirname(os.path.realpath(__file__))}/history/search_history.db")
 			self.history_c = self.history_conn.cursor()
 
-			self.bookmark_conn = sqlite3.connect("bookmarks/bookmarks.db")
+			self.bookmark_conn = sqlite3.connect(f"{os.path.dirname(os.path.realpath(__file__))}/bookmarks/bookmarks.db")
 			self.bookmark_c = self.bookmark_conn.cursor()
 		except:
 			print(
@@ -120,18 +120,18 @@ class MainWindow(QMainWindow):
 		navbar.setMovable(False)
 
 		# Back Button
-		backbtn = QAction(QIcon('img/back.png'), 'Back', self)
+		backbtn = QAction(QIcon(f'{os.path.dirname(os.path.realpath(__file__))}/img/back.png'), 'Back', self)
 		backbtn.triggered.connect(lambda: self.tabs.currentWidget().back())
 		navbar.addAction(backbtn)
 
 		# Forward Button
-		forwardbtn = QAction(QIcon('img/forward.png'), 'Forward', self)
+		forwardbtn = QAction(QIcon(f'{os.path.dirname(os.path.realpath(__file__))}/img/forward.png'), 'Forward', self)
 		forwardbtn.triggered.connect(
 			lambda: self.tabs.currentWidget().forward())
 		navbar.addAction(forwardbtn)
 
 		# Reload Button
-		reloadbtn = QAction(QIcon('img/reload.png'), 'Reload', self)
+		reloadbtn = QAction(QIcon(f'{os.path.dirname(os.path.realpath(__file__))}/img/reload.png'), 'Reload', self)
 		reloadbtn.triggered.connect(lambda: self.tabs.currentWidget().reload())
 		navbar.addAction(reloadbtn)
 
@@ -341,7 +341,7 @@ class MainWindow(QMainWindow):
 
 	def newtab(self, *args, qurl=None, label="about:blank"):
 		if qurl is None:
-			qurl = QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html")
+			qurl = QUrl.fromLocalFile(f"{os.path.dirname(os.path.realpath(__file__))}/home/home.html")
 		global browser
 		browser = QWebEngineView()
 		browser.setContextMenuPolicy(Qt.PreventContextMenu)
@@ -422,7 +422,7 @@ class MainWindow(QMainWindow):
 	def closetab(self, i):
 		if self.tabs.count() < 2:
 			self.tabs.currentWidget().setUrl(
-				QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html"))
+				QUrl.fromLocalFile(f"{os.path.dirname(os.path.realpath(__file__))}/home/home.html"))
 		else:
 			self.tabs.removeTab(i)
 
@@ -431,15 +431,15 @@ class MainWindow(QMainWindow):
 		if self.urlbar.text() == "chrome:dino" or self.urlbar.text() == "chrome://dino":
 			self.urlbar.setText("webx://snake")
 		if self.urlbar.text() == "webx:history" or self.urlbar.text() == "webx://history":
-			url = QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html")
+			url = QUrl.fromLocalFile(f"{os.path.dirname(os.path.realpath(__file__))}/history/history.html")
 		if self.urlbar.text() == "webx:home" or self.urlbar.text() == "webx://home" or self.urlbar.text() == "":
-			url = QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html")
+			url = QUrl.fromLocalFile(f"{os.path.dirname(os.path.realpath(__file__))}/home/home.html")
 		if self.urlbar.text() == "webx:bookmarks" or self.urlbar.text() == "webx://bookmarks":
-			url = QUrl.fromLocalFile(f"{os.getcwd()}/bookmarks/bookmarks.html")
+			url = QUrl.fromLocalFile(f"{os.path.dirname(os.path.realpath(__file__))}/bookmarks/bookmarks.html")
 		if self.urlbar.text() == "webx:links" or self.urlbar.text() == "webx://links":
-			url = QUrl.fromLocalFile(f"{os.getcwd()}/links/links.html")
+			url = QUrl.fromLocalFile(f"{os.path.dirname(os.path.realpath(__file__))}/links/links.html")
 		if self.urlbar.text() == "webx:snake" or self.urlbar.text() == "webx://snake":
-			url = QUrl.fromLocalFile(f"{os.getcwd()}/snake_game/snake.html")
+			url = QUrl.fromLocalFile(f"{os.path.dirname(os.path.realpath(__file__))}/snake_game/snake.html")
 		if url.scheme() == "":
 			url.setScheme("https")
 		if url.scheme() == "http":
@@ -464,7 +464,7 @@ class MainWindow(QMainWindow):
 		else:
 			self.urlbar.setText(url.toString())
 
-		if url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html").toString():
+		if url.toString() == QUrl.fromLocalFile(f"{os.path.dirname(os.path.realpath(__file__))}/history/history.html").toString():
 			try:
 				self.urlbar.setText("webx://history")
 				self.history_c.execute(
@@ -473,7 +473,7 @@ class MainWindow(QMainWindow):
 			except:
 				print(
 					"Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
-		elif url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/snake_game/snake.html").toString():
+		elif url.toString() == QUrl.fromLocalFile(f"{os.path.dirname(os.path.realpath(__file__))}/snake_game/snake.html").toString():
 			try:
 				self.urlbar.setText("webx://snake")
 				self.history_c.execute(
@@ -482,7 +482,7 @@ class MainWindow(QMainWindow):
 			except:
 				print(
 					"Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
-		elif url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html").toString() or self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html").toString() + "?":
+		elif url.toString() == QUrl.fromLocalFile(f"{os.path.dirname(os.path.realpath(__file__))}/home/home.html").toString() or self.url.toString() == QUrl.fromLocalFile(f"{os.path.dirname(os.path.realpath(__file__))}/home/home.html").toString() + "?":
 			try:
 				self.urlbar.setText("")
 				self.history_c.execute(
@@ -491,7 +491,7 @@ class MainWindow(QMainWindow):
 			except:
 				print(
 					"Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
-		elif url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/links/links.html").toString():
+		elif url.toString() == QUrl.fromLocalFile(f"{os.path.dirname(os.path.realpath(__file__))}/links/links.html").toString():
 			try:
 				self.urlbar.setText("webx://links")
 				self.history_c.execute(
@@ -500,7 +500,7 @@ class MainWindow(QMainWindow):
 			except:
 				print(
 					"Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
-		elif url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/bookmarks/bookmarks.html").toString():
+		elif url.toString() == QUrl.fromLocalFile(f"{os.path.dirname(os.path.realpath(__file__))}/bookmarks/bookmarks.html").toString():
 			try:
 				self.urlbar.setText("webx://bookmarks")
 				self.history_c.execute(
@@ -535,7 +535,7 @@ class MainWindow(QMainWindow):
 		self.setWindowTitle("%s – WebX" % self.tabs.tabText(self.tabs.currentIndex()))
 
 	def checkHistory(self):
-		current = os.getcwd()
+		current = os.path.dirname(os.path.realpath(__file__))
 		file_path = current + "/history/history.html"
 		qurl = QUrl.fromLocalFile(file_path)
 		global browser
@@ -587,19 +587,19 @@ class MainWindow(QMainWindow):
 		minute = now.strftime("%M")
 		second = now.strftime("%S")
 
-		if self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/bookmarks/bookmarks.html").toString():
+		if self.url.toString() == QUrl.fromLocalFile(f"{os.path.dirname(os.path.realpath(__file__))}/bookmarks/bookmarks.html").toString():
 			self.bookmark_c.execute(
 				f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'webx://bookmarks')")
-		elif self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/history/history.html").toString():
+		elif self.url.toString() == QUrl.fromLocalFile(f"{os.path.dirname(os.path.realpath(__file__))}/history/history.html").toString():
 			self.bookmark_c.execute(
 				f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'webx://history')")
-		elif self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/snake_game/snake.html").toString():
+		elif self.url.toString() == QUrl.fromLocalFile(f"{os.path.dirname(os.path.realpath(__file__))}/snake_game/snake.html").toString():
 			self.bookmark_c.execute(
 				f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'webx://snake')")
-		elif self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html").toString() or self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/home/home.html").toString() + "?":
+		elif self.url.toString() == QUrl.fromLocalFile(f"{os.path.dirname(os.path.realpath(__file__))}/home/home.html").toString() or self.url.toString() == QUrl.fromLocalFile(f"{os.path.dirname(os.path.realpath(__file__))}/home/home.html").toString() + "?":
 			self.bookmark_c.execute(
 				f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'webx://home')")
-		elif self.url.toString() == QUrl.fromLocalFile(f"{os.getcwd()}/links/links.html").toString():
+		elif self.url.toString() == QUrl.fromLocalFile(f"{os.path.dirname(os.path.realpath(__file__))}/links/links.html").toString():
 			self.bookmark_c.execute(
 				f"INSERT INTO bookmark VALUES ('{year}-{month}-{day} {hour}:{minute}:{second}', 'webx://links')")
 		else:
@@ -612,7 +612,7 @@ class MainWindow(QMainWindow):
 	def openBookmarks(self):
 		compile_sqlte3_to_html_bookmark()
 
-		current = os.getcwd()
+		current = os.path.dirname(os.path.realpath(__file__))
 		file_path = current + "/bookmarks/bookmarks.html"
 		qurl = QUrl.fromLocalFile(file_path)
 		global browser
@@ -662,6 +662,8 @@ Official Website:
 	https://webx.jiu-soft.com/
 Copyright:
 	Jiusoft""")
+elif "test" in args:
+	print(os.path.dirname(os.path.realpath(__file__)))
 else:
 	print("Thank you for using the WebX!")
 	os.environ["QT_QPA_PLATFORM"] = "xcb"
