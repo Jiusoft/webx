@@ -87,7 +87,7 @@ class WebEnginePage(QWebEnginePage):
 
 
 class MainWindow(QMainWindow):
-	def __init__(self):
+	def __init__(self, qurl=None):
 		super(MainWindow, self).__init__()
 		self.setMinimumSize(QSize(800, 600))
 		self.resize(QSize(1200, 800))
@@ -157,7 +157,10 @@ class MainWindow(QMainWindow):
 		navbar.addAction(self.newtabButton)
 
 		# Creating First Tab
-		self.newtab()
+		if qurl==None:
+			self.newtab()
+		else:
+			self.newtab(qurl=qurl)
 
 		# Show Everything
 		self.show()
@@ -662,13 +665,19 @@ Official Website:
 	https://webx.jiu-soft.com/
 Copyright:
 	Jiusoft""")
-elif "test" in args:
-	print(os.path.dirname(os.path.realpath(__file__)))
-else:
+elif len(args)==0:
 	print("Thank you for using the WebX!")
 	os.environ["QT_QPA_PLATFORM"] = "xcb"
 	os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--enable-logging --log-level=3 --ignore-certificate-errors --ignore-ssl-errors"
 	app = QApplication(path)
 	QApplication.setApplicationName('WebX')
 	window = MainWindow()
+	app.exec_()
+else:
+	print("Thank you for using the WebX!")
+	os.environ["QT_QPA_PLATFORM"] = "xcb"
+	os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--enable-logging --log-level=3 --ignore-certificate-errors --ignore-ssl-errors"
+	app = QApplication(path)
+	QApplication.setApplicationName('WebX')
+	window = MainWindow(qurl = QUrl(args[0]))
 	app.exec_()
