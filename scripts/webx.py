@@ -26,7 +26,7 @@ root = tk.Tk()
 root.overrideredirect(True)
 root.geometry(
     f'400x200+{int(root.winfo_screenwidth() / 2) - 200}+{int(root.winfo_screenheight() / 2 - 100)}')
-root.configure(background='green')
+root.configure(background='green', cursor="none")
 tk.Label(master=root, text='WebX',
          font=('Ariel', 30), bg='green').pack()
 tk.Label(master=root, text='By Jiusoft', font=('Ariel', 20), bg='green').pack()
