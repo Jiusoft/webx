@@ -18,7 +18,6 @@ from bookmark import compile_sqlte3_to_html_bookmark
 import platform
 windows = platform.system()=="Windows"
 linux = platform.system()=="Linux"
-path = [sys.argv[0]]
 args = sys.argv[1:]
 
 
@@ -673,7 +672,7 @@ elif len(args)==0:
 	if linux:
 		os.environ["QT_QPA_PLATFORM"] = "xcb"
 	os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--enable-logging --log-level=3 --ignore-certificate-errors --ignore-ssl-errors"
-	app = QApplication(path)
+	app = QApplication([])
 	app.setStyle("windows")
 	QApplication.setApplicationName('WebX')
 	window = MainWindow()
@@ -683,7 +682,7 @@ else:
 	if linux:
 		os.environ["QT_QPA_PLATFORM"] = "xcb"
 	os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--enable-logging --log-level=3 --ignore-certificate-errors --ignore-ssl-errors"
-	app = QApplication(path)
+	app = QApplication([])
 	QApplication.setApplicationName('WebX')
 	window = MainWindow(qurl = QUrl(args[0]))
 	app.exec_()
