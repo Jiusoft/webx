@@ -15,6 +15,9 @@ import os
 import sqlite3
 from history import compile_sqlte3_to_html_history
 from bookmark import compile_sqlte3_to_html_bookmark
+import platform
+windows = platform.system()=="Windows"
+linux = platform.system()=="Linux"
 path = [sys.argv[0]]
 args = sys.argv[1:]
 
@@ -152,7 +155,7 @@ class MainWindow(QMainWindow):
 		navbar.addSeparator()
 
 		# Adding a new tab button
-		self.newtabButton = QAction(QIcon('img/newtab.png'), "New Tab", self)
+		self.newtabButton = QAction(QIcon(f'{os.path.dirname(os.path.realpath(__file__))}/img/newtab.png'), "New Tab", self)
 		self.newtabButton.triggered.connect(self.newtab)
 		navbar.addAction(self.newtabButton)
 
@@ -667,15 +670,18 @@ Copyright:
 	Jiusoft""")
 elif len(args)==0:
 	print("Thank you for using the WebX!")
-	os.environ["QT_QPA_PLATFORM"] = "xcb"
+	if linux:
+		os.environ["QT_QPA_PLATFORM"] = "xcb"
 	os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--enable-logging --log-level=3 --ignore-certificate-errors --ignore-ssl-errors"
 	app = QApplication(path)
+	app.setStyle("windows")
 	QApplication.setApplicationName('WebX')
 	window = MainWindow()
 	app.exec_()
 else:
 	print("Thank you for using the WebX!")
-	os.environ["QT_QPA_PLATFORM"] = "xcb"
+	if linux:
+		os.environ["QT_QPA_PLATFORM"] = "xcb"
 	os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--enable-logging --log-level=3 --ignore-certificate-errors --ignore-ssl-errors"
 	app = QApplication(path)
 	QApplication.setApplicationName('WebX')
