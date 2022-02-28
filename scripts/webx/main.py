@@ -176,11 +176,6 @@ class MainWindow(QMainWindow):
 		openhtmlfile.setShortcut('Ctrl+O')
 		openhtmlfile.triggered.connect(self.openhtmlfile)
 
-		# Open PDF file
-		openpdffile = QAction('Open &PDF File', self)
-		openpdffile.setShortcut('Ctrl+Shift+P')
-		openpdffile.triggered.connect(self.openpdffile)
-
 		# New Window
 		newwinAction = QAction('&New Window', self)
 		newwinAction.setShortcut('Ctrl+Shift+N')
@@ -271,18 +266,6 @@ class MainWindow(QMainWindow):
 		if not filepath2str == "":
 			self.newtab(qurl=QUrl(f"file:{filepath2str}"))
 
-	def openpdffile(self):
-		if platform.system() == "Linux" or platform.system() == "Darwin":
-			filepath = QFileDialog.getOpenFileName(
-				None, "Open File", "/", "PDF Files (*.pdf)")
-		else:
-			filepath = QFileDialog.getOpenFileName(
-				None, "Open File", "C:\\", "PDF Files (*.pdf)")
-		filepath2str = str(filepath)
-		filepath2str = filepath2str[2:-23]
-		if not filepath2str == "":
-			self.newtab(qurl=QUrl(f"chrome-extension://mhjfbmdgcfjbbpaeojofohoefgiehjai/index.html?file://{filepath2str}"))
-
 	def maximize(self):
 		if self.isMaximized():
 			self.showNormal()
@@ -357,9 +340,8 @@ class MainWindow(QMainWindow):
 		self.tabs.setCurrentIndex(i)
 		browser.urlChanged.connect(lambda qurl, browser=browser:
 								   self.updateurl(qurl, browser))
-		if not qurl.toString().startswith("chrome-extension://mhjfbmdgcfjbbpaeojofohoefgiehjai/index.html"):
-			browser.loadFinished.connect(lambda _, i=i, browser=browser:
-										self.tabs.setTabText(i, browser.page().title()))
+		browser.loadFinished.connect(lambda _, i=i, browser=browser:
+									self.tabs.setTabText(i, browser.page().title()))
 		browser.loadFinished.connect(self.updatetitle)
 		browser.page().profile().downloadRequested.connect(download_file)
 		browser.page().fullScreenRequested.connect(
@@ -373,7 +355,6 @@ class MainWindow(QMainWindow):
 		self.fullscreen.activated.connect(self.handle_f11_pressed)	
 		browser.page().profile().setHttpUserAgent(f'WebX/{version}')
 		browser.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
-		browser.settings().setAttribute(QWebEngineSettings.PluginsEnabled, True)
 		browser.settings().setAttribute(QWebEngineSettings.PlaybackRequiresUserGesture, True)
 		
 	def handle_f11_pressed(self):
@@ -510,17 +491,6 @@ class MainWindow(QMainWindow):
 				self.urlbar.setText("webx://bookmarks")
 				self.history_c.execute(
 					f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}:{minute}:{second}', 'webx://bookmarks')")
-				self.history_conn.commit()
-			except:
-				print(
-					"Cannot access file \"search_history.db\" or \"bookmarks.db\"; most likely because of a wrong directory error.")
-		elif url.toString().startswith("chrome-extension://mhjfbmdgcfjbbpaeojofohoefgiehjai/index.html"):
-			try:
-				self.urlbar.setText("pdf" + url.toString()[67:])
-				self.tabs.setTabText(self.tabs.currentIndex(), "PDF Reader")
-				self.history_c.execute(
-					f"INSERT INTO history VALUES ('{year}-{month}-{day}', '{hour}-{minute}-{second}', 'pdf{url.toString()[67:]}')"
-				)
 				self.history_conn.commit()
 			except:
 				print(
