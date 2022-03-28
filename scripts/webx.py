@@ -191,6 +191,6 @@ elif len(args) > 1:
     )
 else:
     t = Thread(target=main)
-    t.setDaemon(True)
+    t.daemon = True
     t.start()
     root.mainloop()
