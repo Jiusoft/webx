@@ -3,6 +3,7 @@ Original repository link: https://github.com/Jiusoft/webx
 """
 # Importing Libraries This Browser Needs
 from contextlib import contextmanager
+import socket
 import sys
 import platform
 from PyQt5.QtCore import *
@@ -22,6 +23,15 @@ args = sys.argv[1:]
 
 
 # Setting Up This Browser
+def is_connected():
+		try:
+			# connect to the host -- tells us if the host is actually
+			# reachable
+			socket.create_connection(("1.1.1.1", 53))
+			return True
+		except OSError:
+			pass
+		return False
 try:
 	history_conn = sqlite3.connect(f"{os.path.dirname(os.path.realpath(__file__))}/history/search_history.db")
 	history_c = history_conn.cursor()
@@ -134,7 +144,7 @@ class MainWindow(QMainWindow):
 
 		# Reload Button
 		reloadbtn = QAction(QIcon(f'{os.path.dirname(os.path.realpath(__file__))}/img/reload.png'), 'Reload', self)
-		reloadbtn.triggered.connect(lambda: self.tabs.currentWidget().reload())
+		reloadbtn.triggered.connect(lambda: self.reload())
 		navbar.addAction(reloadbtn)
 
 		# Adding a space between the reload button and URL Bar
@@ -246,6 +256,10 @@ class MainWindow(QMainWindow):
 			bookmarks.append(page)
 		return bookmarks
 
+	def reload(self):
+		self.urlbar.setText(QUrl.toString(browser.url()))
+		self.navigatetourl()
+
 	def detectsearch(self):
 		urlorquery = self.urlbar.text()
 		if not urlorquery.startswith("? "):
@@ -270,6 +284,7 @@ class MainWindow(QMainWindow):
 			self.showNormal()
 		else:
 			self.showMaximized()
+
 
 	def doasearch(self):
 		keyword = self.urlbar.text()[2:]
@@ -411,7 +426,7 @@ class MainWindow(QMainWindow):
 		else:
 			self.tabs.removeTab(i)
 
-	def navigatetourl(self):
+	def navigatetourl(self, nodetectinternet=False):
 		url = QUrl(self.urlbar.text())
 		if self.urlbar.text() == "chrome:dino" or self.urlbar.text() == "chrome://dino":
 			self.urlbar.setText("webx://snake")
@@ -429,7 +444,15 @@ class MainWindow(QMainWindow):
 			url.setScheme("https")
 		if url.scheme() == "http":
 			url.setScheme("https")
-		self.tabs.currentWidget().setUrl(url)
+		if nodetectinternet:
+			self.tabs.currentWidget().setUrl(url)
+		else:
+			if is_connected():
+				self.tabs.currentWidget().setUrl(url)
+			else:
+				self.urlbar.setText("webx:snake")
+				self.navigatetourl(nodetectinternet=True)
+				del tmp
 		browser.setFocus()
 
 	def updateurl(self, url, browser=None):
