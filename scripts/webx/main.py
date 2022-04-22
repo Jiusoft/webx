@@ -675,5 +675,10 @@ else:
 	os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--enable-logging --log-level=3 --ignore-certificate-errors --ignore-ssl-errors"
 	app = QApplication([])
 	QApplication.setApplicationName('WebX')
-	window = MainWindow(qurl = QUrl(args[0]))
+	tmp = QUrl(args[0])
+	if tmp.scheme() == "":
+		tmp.setScheme("https")
+	elif tmp.scheme() == "http":
+		tmp.setScheme("https")
+	window = MainWindow(qurl = tmp)
 	app.exec_()
