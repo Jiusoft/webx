@@ -2,21 +2,16 @@
 Original repository link: https://github.com/Jiusoft/webx
 """
 # Importing Libraries This Browser Needs
+import os, sys, socket, platform, subprocess, sqlite3
 from contextlib import contextmanager
-import socket
-import sys
-import platform
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtGui import *
 from download import download_file
 from datetime import datetime
-import os
-import sqlite3
 from history import compile_sqlte3_to_html_history
 from bookmark import compile_sqlte3_to_html_bookmark
-import platform
 windows = platform.system()=="Windows"
 linux = platform.system()=="Linux"
 args = sys.argv[1:]
