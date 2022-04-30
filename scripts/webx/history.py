@@ -19,7 +19,10 @@ def compile_sqlte3_to_html_history():
     
     with open(f"{os.path.dirname(os.path.realpath(__file__))}/history/history.html", "w") as history:
         history.write("<head><title>History</title><link rel=\"stylesheet\" href=\"history_styles.css\"></head><h1>your browsing history</h1>")
-        history.write(df.to_html(index=None))
+        if df.empty:
+            history.write("<h2>You have no internet...keep browsing the web</h2>")
+        else:
+            history.write(df.to_html(index=None))
         
     conn.close()
 # Enhancements coming soon...

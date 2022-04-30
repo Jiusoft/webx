@@ -18,7 +18,11 @@ def compile_sqlte3_to_html_bookmark():
 
     with open(f"{os.path.dirname(os.path.realpath(__file__))}/bookmarks/bookmarks.html", "w") as bookmarks:
         bookmarks.write("<head><title>Bookmarks</title><link rel=\"stylesheet\" href=\"bookmarks_styles.css\"></head><h1>Bookmarks</h1>")
-        bookmarks.write(df.to_html(index=None))
+
+        if df.empty:
+            bookmarks.write("<h2>You have no bookmarks...</h2>")
+        else:
+            bookmarks.write(df.to_html(index=None))
         
     conn.close()
 # Enhancements coming soon...
