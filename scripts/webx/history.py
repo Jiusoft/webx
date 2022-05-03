@@ -5,6 +5,8 @@ import pandas as pd
 import sqlite3
 import os
 
+os.chdir(os.path.dirname(os.path.realpath(__file__)))
+
 def compile_sqlte3_to_html_history():
     try:
         conn = sqlite3.connect(f'{os.path.dirname(os.path.realpath(__file__))}/history/search_history.db')
@@ -20,7 +22,7 @@ def compile_sqlte3_to_html_history():
     with open(f"{os.path.dirname(os.path.realpath(__file__))}/history/history.html", "w") as history:
         history.write("<head><title>History</title><link rel=\"stylesheet\" href=\"history_styles.css\"></head><h1>your browsing history</h1>")
         if df.empty:
-            history.write("<h2>You have no history...keep browsing the web</h2>")
+            history.write("<center><p style=\"color: #90ee90;\"><strong>You have no history... Keep browsing the web!</strong></p></center>")
         else:
             history.write(df.to_html(index=None))
         

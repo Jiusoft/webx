@@ -4,10 +4,11 @@ Original repository link: https://github.com/Jiusoft/webx
 # Importing Libraries This Browser Needs
 import os, sys, socket, platform, subprocess, sqlite3
 from contextlib import contextmanager
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtWebEngineWidgets import *
-from PyQt5.QtGui import *
+from PyQt6.QtCore import *
+from PyQt6.QtWidgets import *
+from PyQt6.QtWebEngineWidgets import *
+from PyQt6.QtWebEngineCore import *
+from PyQt6.QtGui import *
 from download import download_file
 from datetime import datetime
 from history import compile_sqlte3_to_html_history
@@ -59,7 +60,7 @@ def suppress_stdout():
 
 class ListWidget(QListWidget):
 	def doubleClicked(self, item):
-		bookmark_conn = sqlite3.connect("bookmarks/bookmarks.db")
+		bookmark_conn = sqlite3.connect(f"{os.path.dirname(os.path.realpath(__file__))}/bookmarks/bookmarks.db")
 		bookmark_c = bookmark_conn.cursor()
 
 		current = item.text()
@@ -123,7 +124,7 @@ class MainWindow(QMainWindow):
 		global navbar
 		navbar = QToolBar()
 		self.addToolBar(navbar)
-		navbar.setContextMenuPolicy(Qt.PreventContextMenu)
+		navbar.setContextMenuPolicy(Qt.ContextMenuPolicy.PreventContextMenu)
 		navbar.setMovable(False)
 
 		# Back Button
@@ -139,7 +140,7 @@ class MainWindow(QMainWindow):
 
 		# Reload Button
 		reloadbtn = QAction(QIcon(f'{os.path.dirname(os.path.realpath(__file__))}/img/reload.png'), 'Reload', self)
-		reloadbtn.triggered.connect(lambda: self.reload())
+		reloadbtn.triggered.connect(lambda: self.tabs.currentWidget().reload())
 		navbar.addAction(reloadbtn)
 
 		# Adding a space between the reload button and URL Bar
@@ -224,7 +225,7 @@ class MainWindow(QMainWindow):
 		# Seting Up Menubar
 		global menubar
 		menubar = self.menuBar()
-		menubar.setContextMenuPolicy(Qt.PreventContextMenu)
+		menubar.setContextMenuPolicy(Qt.ContextMenuPolicy.PreventContextMenu)
 		fileMenu = menubar.addMenu('&File')
 		fileMenu.addAction(openhtmlfile)
 		fileMenu.addAction(newwinAction)
@@ -250,10 +251,6 @@ class MainWindow(QMainWindow):
 			page = bookmark[0]
 			bookmarks.append(page)
 		return bookmarks
-
-	def reload(self):
-		self.urlbar.setText(QUrl.toString(browser.url()))
-		self.navigatetourl()
 
 	def detectsearch(self):
 		urlorquery = self.urlbar.text()
@@ -341,7 +338,7 @@ class MainWindow(QMainWindow):
 			qurl = QUrl.fromLocalFile(f"{os.path.dirname(os.path.realpath(__file__))}/home/home.html")
 		global browser
 		browser = QWebEngineView()
-		browser.setContextMenuPolicy(Qt.PreventContextMenu)
+		browser.setContextMenuPolicy(Qt.ContextMenuPolicy.PreventContextMenu)
 		page = WebEnginePage(browser)
 		browser.setPage(page)
 		browser.setUrl(qurl)
@@ -363,8 +360,8 @@ class MainWindow(QMainWindow):
 		self.fullscreen = QShortcut(QKeySequence("F11"), self)
 		self.fullscreen.activated.connect(self.handle_f11_pressed)	
 		browser.page().profile().setHttpUserAgent(f'WebX/{version}')
-		browser.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
-		browser.settings().setAttribute(QWebEngineSettings.PlaybackRequiresUserGesture, True)
+		browser.settings().setAttribute(QWebEngineSettings.WebAttribute.FullScreenSupportEnabled, True)
+		browser.settings().setAttribute(QWebEngineSettings.WebAttribute.PlaybackRequiresUserGesture, True)
 		
 	def handle_f11_pressed(self):
 		if self.isMaximized():
@@ -385,7 +382,7 @@ class MainWindow(QMainWindow):
 			navbar.hide()
 			self.tabs.tabBar().hide()
 
-	def handle_fullscreen_requested(self, request):
+	def handle_fullscreen_requested(self, request, browser):
 		request.accept()
 		if self.isMaximized():
 			maximize = True
@@ -532,7 +529,7 @@ class MainWindow(QMainWindow):
 		qurl = QUrl.fromLocalFile(file_path)
 		global browser
 		browser = QWebEngineView()
-		browser.setContextMenuPolicy(Qt.PreventContextMenu)
+		browser.setContextMenuPolicy(Qt.ContextMenuPolicy.PreventContextMenu)
 		page = WebEnginePage(browser)
 		browser.setPage(page)
 		browser.setUrl(qurl)
@@ -549,13 +546,13 @@ class MainWindow(QMainWindow):
 		)
 		self.urlbar.setText("webx://history")
 		browser.page().profile().setHttpUserAgent(f'WebX/{version}')
-		browser.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
+		browser.settings().setAttribute(QWebEngineSettings.WebAttribute.FullScreenSupportEnabled, True)
 
 	def removeHistory(self):
 		self.history_conn.commit()
 		self.history_conn.close()
 
-		os.remove("history/search_history.db")
+		os.remove(f"{os.path.dirname(os.path.realpath(__file__))}/history/search_history.db")
 
 		try:
 			self.history_conn = sqlite3.connect("history/search_history.db")
@@ -609,7 +606,7 @@ class MainWindow(QMainWindow):
 		qurl = QUrl.fromLocalFile(file_path)
 		global browser
 		browser = QWebEngineView()
-		browser.setContextMenuPolicy(Qt.PreventContextMenu)
+		browser.setContextMenuPolicy(Qt.ContextMenuPolicy.PreventContextMenu)
 		page = WebEnginePage(browser)
 		browser.setPage(page)
 		browser.setUrl(qurl)
@@ -626,7 +623,7 @@ class MainWindow(QMainWindow):
 		)
 		self.urlbar.setText("webx://bookmarks")
 		browser.page().profile().setHttpUserAgent(f'WebX/{version}')
-		browser.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
+		browser.settings().setAttribute(QWebEngineSettings.WebAttribute.FullScreenSupportEnabled, True)
 
 	def removeBookmarks(self):
 		global listWidget
@@ -662,7 +659,7 @@ elif len(args)==0:
 	app = QApplication([])
 	QApplication.setApplicationName('WebX')
 	window = MainWindow()
-	app.exec_()
+	app.exec()
 else:
 	print("Thank you for using the WebX!")
 	if linux:
@@ -676,4 +673,4 @@ else:
 	elif tmp.scheme() == "http":
 		tmp.setScheme("https")
 	window = MainWindow(qurl = tmp)
-	app.exec_()
+	app.exec()

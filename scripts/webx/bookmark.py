@@ -20,7 +20,7 @@ def compile_sqlte3_to_html_bookmark():
         bookmarks.write("<head><title>Bookmarks</title><link rel=\"stylesheet\" href=\"bookmarks_styles.css\"></head><h1>Bookmarks</h1>")
 
         if df.empty:
-            bookmarks.write("<h2>You have no bookmarks...</h2>")
+            bookmarks.write("<center><p style=\"color: #90ee90;\"><strong>You have no bookmarks...</strong></p></center>")
         else:
             bookmarks.write(df.to_html(index=None))
         

@@ -33,7 +33,7 @@ Discord: jothin-kumar#1075
 ## Omar Moustafa:
 Github: [@Omar8345](https://github.com/Omar8345)
 <br>
-Discord: Omar Dev 8345#4914
+Discord: expo 2020#4914
 <br>
 Email: [osedki@outlook.com](mailto:osedki@outlook.com)
 
