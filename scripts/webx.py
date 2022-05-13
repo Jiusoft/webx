@@ -1,196 +1,71 @@
 """
 Original repository link: https://github.com/Jiusoft/webx
-Author: Jothin kumar (https://jothin-kumar.github.io)
+Author: Jothin kumar (https://jothin.tech/)
 """
 import tkinter as tk
 from tkinter.messagebox import showerror
 from time import sleep
 from threading import Thread
 from requests import get
-from datetime import datetime
-from os.path import exists
-from os import remove, system
-import platform
-import sys
+from os import system
+from hashlib import sha256
 
-if exists('version'):
-    with open('version', 'r') as f:
-        version = f.read()
-else:
-    version = ''
-
-args = sys.argv[1:]
-linux = platform.system() == 'Linux'
-windows = platform.system() == 'Windows'
 root = tk.Tk()
 root.overrideredirect(True)
-root.geometry(
-    f'400x200+{int(root.winfo_screenwidth() / 2) - 200}+{int(root.winfo_screenheight() / 2 - 100)}')
-root.configure(background='green', cursor="none")
-tk.Label(master=root, text='WebX',
-         font=('Ariel', 30), bg='green').pack()
-tk.Label(master=root, text='By Jiusoft', font=('Ariel', 20), bg='green').pack()
-progress_label = tk.Label(master=root, text='', font=('Ariel', 15), bg='green')
-progress_label.pack(side=tk.BOTTOM)
+root.wm_title('Webx - Jiusoft')
+root.resizable(False, False)
+root.geometry(f'500x300+{int(root.winfo_screenwidth()/2) - 250}+{int(root.winfo_screenheight()/2) - 150}')
+title = tk.Label(root, text='Webx - Jiusoft', font=('Ariel', 25), fg='white')
+title.pack(pady=90)
+status_label = tk.Label(text='Loading...', fg='white')
+status_label.pack(pady=10)
 
+def rgb_to_hex(rgb):
+    return "#%02x%02x%02x" % rgb
+def background_color_animation():
+    while True:
+        for g in range(0, 200):
+            background = rgb_to_hex((150, g, 100))
+            root.configure(background=background)
+            title.configure(background=background)
+            status_label.configure(background=background)
+            sleep(0.03)
+        for g in reversed(range(0, 200)):
+            background = rgb_to_hex((150, g, 100))
+            root.configure(background=background)
+            title.configure(background=background)
+            status_label.configure(background=background)
+            sleep(0.03)
+Thread(target=background_color_animation).start()
 
-def log(message):
-    try:
-        now = datetime.now()
-        with open('launcher-logs.txt', 'a+') as log_file:
-            log_file.write(
-                f'[{now.month}/{now.day} {now.year} {now.hour}:{now.minute}:{now.second}]: {message}\n')
-    except RuntimeError:
-        log('RuntimeError in function log')
-    except Exception as e:
-        showerror(
-            'Error', f'An error occurred in function log: {e}\nPlease raise an issue on GitHub')
+def launch_webx():
+    status_label.configure(text='Verifying hashes...')
+    file_hashes_data = get('https://raw.githubusercontent.com/Jiusoft/webx/main/file-hashes.txt').text
+    num_of_files = len(file_hashes_data.split('\n')) - 1
+    num_of_files_verified = 0
+    status_label.configure(text=f'Verifying hashes... [{num_of_files_verified}/{num_of_files}]')
 
+    class FileHash:
+        def __init__(self, string):
+            self.url = string.split('||')[0].strip()
+            self.hash_ = string.split('||')[-1].strip()
+            self.path = self.url.replace('https://raw.githubusercontent.com/Jiusoft/webx/main/scripts/', '')
 
-def in_progress_msg(msg):
-    try:
-        def command():
-            progress_label['text'] = msg
-            while True:
-                sleep(0.5)
-                if progress_label['text'] in [msg, msg + '.', msg + '..']:
-                    progress_label['text'] += '.'
-                elif progress_label['text'] == msg + '...':
-                    progress_label['text'] = msg
-                else:
-                    break
+    for line in file_hashes_data.split('\n'):
+        if line:
+            num_of_files_verified += 1
+            status_label.configure(text=f'Verifying hashes... [{num_of_files_verified}/{num_of_files}]')
+            file = FileHash(line)
+            with open(file.path, 'rb') as file_content:
+                if sha256(file_content.read()).hexdigest() != file.hash_:
+                    with open(file.path, 'wb') as _:
+                        _.write(get(file.url).content)
 
-        Thread(target=command).start()
-    except RuntimeError:
-        log('RuntimeError in function in_progress_msg')
-    except Exception as e:
-        log(f'Error: {e}')
-        showerror(
-            'Error', f'An error occurred in function in_progress_msg: {e}\nPlease raise an issue on GitHub')
+    root.withdraw()
+    if system('cd webx && python3 main.py'):
+        root.deiconify()
+        status_label.configure(text='Launch failed.')
+        showerror(title='Error - WebX Launcher', message='Failed to launch WebX. Check log file for more info.')
+Thread(target=launch_webx).start()
 
-
-def check_for_updates():
-    try:
-        in_progress_msg('Checking for updates')
-        log('Checking for updates')
-        latest_version = get(
-            'https://cdn.jiu-soft.com/webx/latest-version.txt').text.strip('\n')
-        log(f'lv - {latest_version}')
-        return latest_version != version, latest_version
-    except RuntimeError:
-        log('RuntimeError in function check_for_updates')
-    except Exception as e:
-        log(f'Error: {e}')
-        showerror(
-            'Error', f'An error occurred in function check_for_updates: {e}\nPlease raise an issue on GitHub')
-
-
-def fetch_launch_command():
-    try:
-        in_progress_msg('Fetching launch command')
-        log('Fetching launch command')
-        with open('launch-command', 'wb') as file:
-            if linux:
-                file.write(
-                    get('https://cdn.jiu-soft.com/webx/launch-command-linux.txt', allow_redirects=True).content)
-            elif windows:
-                file.write(
-                    get('https://cdn.jiu-soft.com/webx/launch-command-windows.txt', allow_redirects=True).content)
-        log('Launch command fetched')
-    except RuntimeError:
-        log('RuntimeError in function fetch_launch_command')
-    except Exception as e:
-        log(f'Error: {e}')
-        showerror(
-            'Error', f'An error occurred in function fetch_launch_command: {e}\nPlease raise an issue on GitHub')
-
-
-def download_update(latest_version):
-    try:
-        in_progress_msg('Downloading update')
-        log('Downloading update')
-        with open('update_temp.zip', 'wb') as file:
-            if linux:
-                file.write(get(
-                    'https://cdn.jiu-soft.com/webx/webx-files-linux.zip', allow_redirects=True).content)
-            elif windows:
-                file.write(get(
-                    'https://cdn.jiu-soft.com/webx/webx-files-windows.zip', allow_redirects=True).content)
-        fetch_launch_command()
-        with open('version', 'w') as file:
-            file.write(latest_version)
-        log('Update downloaded')
-    except RuntimeError:
-        log('RuntimeError in function download_update')
-    except Exception as e:
-        log(f'Error: {e}')
-        showerror(
-            'Error', f'An error occurred in function download_update: {e}\nPlease raise an issue on GitHub')
-
-
-def install_update():
-    try:
-        in_progress_msg('Installing update')
-        log('Installing update')
-        import zipfile
-        zip_file = zipfile.ZipFile('update_temp.zip', 'r')
-        zip_file.extractall('webx')
-        zip_file.close()
-        remove('update_temp.zip')
-        log('Update installed')
-    except RuntimeError:
-        log('RuntimeError in function install_update')
-    except Exception as e:
-        log(f'Error: {e}')
-        showerror(
-            'Error', f'An error occurred in function install_update: {e}\nPlease raise an issue on GitHub')
-
-
-def launch():
-    try:
-        in_progress_msg('Launching')
-        log('Launching browser')
-        if not exists('launch-command'):
-            fetch_launch_command()
-        with open('launch-command', 'r') as file:
-            system(file.read().strip('\n'))
-    except RuntimeError:
-        log('RuntimeError in function launch')
-    except Exception as e:
-        log(f'Error: {e}')
-        showerror(
-            'Error', f'An error occurred in function launch: {e}\nPlease raise an issue on GitHub')
-
-
-def main():
-    try:
-        updates_available, latest_version = check_for_updates()
-        if updates_available:
-            download_update(latest_version)
-            install_update()
-        Thread(target=launch).start()
-        sleep(1)
-        root.destroy()
-    except RuntimeError:
-        log('RuntimeError in function main')
-    except Exception as e:
-        log(f'Error: {e}')
-        showerror(
-            'Error', f'An error occurred in function main: {e}\nPlease raise an issue on GitHub')
-
-
-if len(args) == 1:
-    with open('launch-command', 'r') as file:
-        command = file.read().strip("\n")
-        for arg in args:
-            command += f" {arg}"
-        system(command)
-elif len(args) > 1:
-    print(
-        "Argument Error: Only one argument allowed for now, sorry for your inconvenience!"
-    )
-else:
-    t = Thread(target=main)
-    t.setDaemon(True)
-    t.start()
-    root.mainloop()
+root.mainloop()
