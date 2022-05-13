@@ -110,6 +110,7 @@ def launch_webx():
                 log(f'Failed to install / update {dependency}')
                 showwarning(title='Install / Update failed for dependency - Webx launcher',
                             message=f'Failed to install / update {dependency}. This might result in improper functioning of WebX. Try running pip install {dependency} manually to resolve this issue.')
+            updated_dependencies += 1
     except Exception as e:
         log(f'Failed to install dependencies: {e}')
         showwarning(title='Install / Update dependencies failed - WebX launcher',
