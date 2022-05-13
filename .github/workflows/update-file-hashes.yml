@@ -1,0 +1,24 @@
+name: Update file hashes
+on: workflow_dispatch
+
+jobs:
+  update-file-hashes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v3
+        with:
+          python-version: "3.x"
+      - name: Update file hashes
+        run: python update_file_hashes.py
+      - name: setup git
+        run: |
+          git config --global user.name "File hash bot"
+          git config --global user.email "<>"
+      - name: Commit changes
+        continue-on-error: true
+        run: |
+          git add file-hashes.txt
+          git commit -m "Update file hashes"
+      - name: git push
+        run: git push origin main
