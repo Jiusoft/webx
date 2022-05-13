@@ -3,7 +3,7 @@ Original repository link: https://github.com/Jiusoft/webx
 Author: Jothin kumar (https://jothin.tech/)
 """
 import tkinter as tk
-from tkinter.messagebox import showerror
+from tkinter.messagebox import showerror, showwarning
 from time import sleep
 from threading import Thread
 from requests import get
@@ -95,6 +95,25 @@ def launch_webx():
                     except Exception as e:
                         log(f'Error: {e}')
                         showerror(title='Error - WebX launcher', message=f'An error occurred while attempting to download {file.path}')
+
+    log('Updating dependencies')
+    status_label.configure(text='Fetching dependencies list')
+    try:
+        dependencies = get('https://raw.githubusercontent.com/Jiusoft/webx/main/requirements.txt').text.strip(
+            '\n').split('\n')
+        total_dependencies = len(dependencies)
+        updated_dependencies = 0
+        for dependency in dependencies:
+            status_label.configure(
+                text=f'Installing / Updating {dependency} [{updated_dependencies + 1}/{total_dependencies}]...')
+            if system(f'pip install {dependency}'):
+                log(f'Failed to install / update {dependency}')
+                showwarning(title='Install / Update failed for dependency - Webx launcher',
+                            message=f'Failed to install / update {dependency}. This might result in improper functioning of WebX. Try running pip install {dependency} manually to resolve this issue.')
+    except Exception as e:
+        log(f'Failed to install dependencies: {e}')
+        showwarning(title='Install / Update dependencies failed - WebX launcher',
+                    message=f'Failed to install / update dependencies. This mightresult in improper functioning of WebX. Check log file for more info.')
 
     root.withdraw()
     if system('cd webx && python3 main.py'):
