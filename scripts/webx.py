@@ -25,7 +25,7 @@ status_label.pack(pady=10)
 def log(message):
     with open('launcher-logs.txt', 'a+') as log_file:
         now = datetime.now()
-        log_file.write(f'{now.year}:{now.month}:{now.day}:{now.hour}:{now.minute}:{now.second} | {message}\n')
+        log_file.write(f'[{now.year}:{now.month}:{now.day}:{now.hour}:{now.minute}:{now.second}] {message}\n')
 
 def rgb_to_hex(rgb):
     return "#%02x%02x%02x" % rgb
