@@ -7,7 +7,8 @@ from tkinter.messagebox import showerror
 from time import sleep
 from threading import Thread
 from requests import get
-from os import system
+from os import system, makedirs
+from os.path import exists
 from hashlib import sha256
 from datetime import datetime
 
@@ -68,17 +69,32 @@ def launch_webx():
             num_of_files_verified += 1
             status_label.configure(text=f'Verifying hashes... [{num_of_files_verified}/{num_of_files}]')
             file = FileHash(line)
-            with open(file.path, 'rb') as file_content:
-                if sha256(file_content.read()).hexdigest() != file.hash_:
-                    log(f'{file.path} hash mismatched. {file.path} hash: {file.hash_}')
-                    with open(file.path, 'wb') as _:
-                        try:
-                            _.write(get(file.url).content)
-                            log(f'{file.path} replaced from {file.url}')
-                        except Exception as e:
-                            log(f'Failed to fetch {file.url}: {e}')
-                            showerror(title='Error - WebX launcher', message=f'An error occurred while fetching {file.url}. Mkae sure that you are connected to the internet and try again.')
-                            exit(1)
+            try:
+                with open(file.path, 'rb') as file_content:
+                    if sha256(file_content.read()).hexdigest() != file.hash_:
+                        log(f'{file.path} hash mismatched. {file.path} hash: {file.hash_}')
+                        with open(file.path, 'wb') as _:
+                            try:
+                                _.write(get(file.url).content)
+                                log(f'{file.path} replaced from {file.url}')
+                            except Exception as e:
+                                log(f'Failed to fetch {file.url}: {e}')
+                                showerror(title='Error - WebX launcher',
+                                          message=f'An error occurred while fetching {file.url}. Mkae sure that you are connected to the internet and try again.')
+                                exit(1)
+            except FileNotFoundError:
+                log(f'File not found: {file.path}')
+                if not exists('/'.join(file.path.split('/')[0:-1])):
+                    makedirs('/'.join(file.path.split('/')[0:-1]), exist_ok=True)
+                with open(file.path, 'w') as _:
+                    pass
+                with open(file.path, 'wb') as file_content:
+                    try:
+                        file_content.write(get(file.url).content)
+                        log(f'Downloaded {file.path} from {file.url}.')
+                    except Exception as e:
+                        log(f'Error: {e}')
+                        showerror(title='Error - WebX launcher', message=f'An error occurred while attempting to download {file.path}')
 
     root.withdraw()
     if system('cd webx && python3 main.py'):
