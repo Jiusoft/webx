@@ -109,6 +109,7 @@ class MainWindow(QMainWindow):
 		self.tabs.setTabsClosable(True)
 		self.tabs.tabCloseRequested.connect(self.closetab)
 		self.setCentralWidget(self.tabs)
+		QShortcut(QKeySequence('Ctrl+W'), self, lambda: self.tabs.removeTab(self.tabs.currentIndex()))  # Close current tab shortcut
 
 		try:
 			self.history_conn = sqlite3.connect(f"{os.path.dirname(os.path.realpath(__file__))}/history/search_history.db")
@@ -140,6 +141,7 @@ class MainWindow(QMainWindow):
 
 		# Reload Button
 		reloadbtn = QAction(QIcon(f'{os.path.dirname(os.path.realpath(__file__))}/img/reload.png'), 'Reload', self)
+		reloadbtn.setShortcut('Ctrl+R')
 		reloadbtn.triggered.connect(lambda: self.tabs.currentWidget().reload())
 		navbar.addAction(reloadbtn)
 
@@ -161,6 +163,7 @@ class MainWindow(QMainWindow):
 
 		# Adding a new tab button
 		self.newtabButton = QAction(QIcon(f'{os.path.dirname(os.path.realpath(__file__))}/img/newtab.png'), "New Tab", self)
+		self.newtabButton.setShortcut('Ctrl+T')
 		self.newtabButton.triggered.connect(self.newtab)
 		navbar.addAction(self.newtabButton)
 
@@ -177,6 +180,13 @@ class MainWindow(QMainWindow):
 		self.setWindowIcon(QIcon('img/WebX.png'))
 
 		# Menubar
+		# Quick navigate to address bar
+		navigateToAddressBarAction = QShortcut(QKeySequence('F4'), self)
+		def navigate_to_addr_bar():
+			self.urlbar.selectAll()
+			self.urlbar.setFocus()
+		navigateToAddressBarAction.activated.connect(navigate_to_addr_bar)
+
 		# Open HTML file
 		openhtmlfile = QAction('Open &HTML File', self)
 		openhtmlfile.setShortcut('Ctrl+O')
