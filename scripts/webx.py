@@ -16,19 +16,23 @@ root = tk.Tk()
 root.overrideredirect(True)
 root.wm_title('Webx - Jiusoft')
 root.resizable(False, False)
-root.geometry(f'500x300+{int(root.winfo_screenwidth()/2) - 250}+{int(root.winfo_screenheight()/2) - 150}')
+root.geometry(f'500x300+{int(root.winfo_screenwidth() / 2) - 250}+{int(root.winfo_screenheight() / 2) - 150}')
 title = tk.Label(root, text='Webx - Jiusoft', font=('Ariel', 25), fg='white')
 title.pack(pady=90)
 status_label = tk.Label(text='Loading...', fg='white')
 status_label.pack(pady=10)
+
 
 def log(message):
     with open('launcher-logs.txt', 'a+') as log_file:
         now = datetime.now()
         log_file.write(f'[{now.year}:{now.month}:{now.day}:{now.hour}:{now.minute}:{now.second}] {message}\n')
 
+
 def rgb_to_hex(rgb):
     return "#%02x%02x%02x" % rgb
+
+
 def background_color_animation():
     while True:
         for g in range(0, 200):
@@ -43,7 +47,10 @@ def background_color_animation():
             title.configure(background=background)
             status_label.configure(background=background)
             sleep(0.03)
+
+
 Thread(target=background_color_animation).start()
+
 
 def launch_webx():
     status_label.configure(text='Verifying hashes...')
@@ -52,7 +59,8 @@ def launch_webx():
         file_hashes_data = get('https://raw.githubusercontent.com/Jiusoft/webx/main/file-hashes.txt').text
     except Exception as e:
         log(f'Failed to fetch file hashes: {e}')
-        showerror(title='Error - WebX launcher', message='An error occurred while trying to fetch file hashes. Make sure that you are connected to the internet and try again.')
+        showerror(title='Error - WebX launcher',
+                  message='An error occurred while trying to fetch file hashes. Make sure that you are connected to the internet and try again.')
         exit(1)
     num_of_files = len(file_hashes_data.split('\n')) - 1
     num_of_files_verified = 0
@@ -94,7 +102,8 @@ def launch_webx():
                         log(f'Downloaded {file.path} from {file.url}.')
                     except Exception as e:
                         log(f'Error: {e}')
-                        showerror(title='Error - WebX launcher', message=f'An error occurred while attempting to download {file.path}')
+                        showerror(title='Error - WebX launcher',
+                                  message=f'An error occurred while attempting to download {file.path}')
 
     log('Updating dependencies')
     status_label.configure(text='Fetching dependencies list')
@@ -125,6 +134,8 @@ def launch_webx():
         exit(1)
     log('Event: Launcher exit')
     exit(0)
+
+
 Thread(target=launch_webx).start()
 
 root.mainloop()
