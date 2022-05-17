@@ -115,7 +115,7 @@ class MainWindow(QMainWindow):
         self.tabs.tabCloseRequested.connect(self.closetab)
         self.setCentralWidget(self.tabs)
         QShortcut(QKeySequence('Ctrl+W'), self,
-                  lambda: self.tabs.removeTab(self.tabs.currentIndex()))  # Close current tab shortcut
+                  lambda: self.closetab(self.tabs.currentIndex()))  # Close current tab shortcut
 
         try:
             self.history_conn = sqlite3.connect(
