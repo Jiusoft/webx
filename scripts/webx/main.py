@@ -150,7 +150,7 @@ class MainWindow(QMainWindow):
         # Reload Button
         reloadbtn = QAction(QIcon(f'{os.path.dirname(os.path.realpath(__file__))}/img/reload.png'), 'Reload', self)
         reloadbtn.setShortcut('Ctrl+R')
-        reloadbtn.triggered.connect(lambda: self.tabs.currentWidget().reload())
+        reloadbtn.triggered.connect(self.reload)
         navbar.addAction(reloadbtn)
 
         # Adding a space between the reload button and URL Bar
@@ -265,6 +265,14 @@ class MainWindow(QMainWindow):
         helpMenu.addAction(aboutAction)
 
     # Defining things
+    def reload(self):
+        if is_connected:
+            self.tabs.currentWidget().reload()
+        else:
+            url=self.tabs.currentWidget().url()
+            self.urlbar.setText("webx:snake")
+            self.navigatetourl(nodetectinternet=True)
+
     def fetchBookmarks(self):
         self.bookmark_c.execute("SELECT DISTINCT link FROM bookmark ORDER BY date DESC")
         bookmarks = []
@@ -464,7 +472,6 @@ class MainWindow(QMainWindow):
             else:
                 self.urlbar.setText("webx:snake")
                 self.navigatetourl(nodetectinternet=True)
-                del tmp
         browser.setFocus()
 
     def updateurl(self, url, browser=None):
@@ -591,6 +598,8 @@ class MainWindow(QMainWindow):
                 "Cannot access file \"search_history.db\"; most likely because of a wrong directory error.")
 
         compile_sqlte3_to_html_history()
+        if self.urlbar.text() == "webx:history" or self.urlbar.text() == "webx://history":
+            self.tabs.currentWidget().reload()
 
     def bookmark(self):
         now = datetime.now()
@@ -696,7 +705,7 @@ elif len(args) == 0:
 else:
     print("Thank you for using the WebX!")
     if linux:
-        os.environ["QT_QPA_PLATFORM"] = "minimal"
+        os.environ["QT_QPA_PLATFORM"] = "xcb"
     os.environ[
         "QTWEBENGINE_CHROMIUM_FLAGS"] = "--enable-logging --log-level=3 --ignore-certificate-errors --ignore-ssl-errors"
     app = QApplication([])
