@@ -13,6 +13,7 @@ from download import download_file
 from datetime import datetime
 from history import compile_sqlte3_to_html_history
 from bookmark import compile_sqlte3_to_html_bookmark
+import setproctitle
 
 windows = platform.system() == "Windows"
 linux = platform.system() == "Linux"
@@ -170,9 +171,10 @@ class MainWindow(QMainWindow):
         navbar.addSeparator()
 
         # Adding a new tab button
-        self.newtabButton = QAction(QIcon(f'{os.path.dirname(os.path.realpath(__file__))}/img/newtab.png'), "New Tab",
-                                    self)
+        #self.newtabButton = QPushButton(QIcon(f'{os.path.dirname(os.path.realpath(__file__))}/img/newtab.png'), "New Tab", self)
+        self.newtabButton = QAction(QIcon(f'{os.path.dirname(os.path.realpath(__file__))}/img/newtab.png'), "New Tab", self)
         self.newtabButton.setShortcut('Ctrl+T')
+        #self.newtabButton.clicked.connect(self.newtab)
         self.newtabButton.triggered.connect(self.newtab)
         navbar.addAction(self.newtabButton)
 
@@ -202,6 +204,11 @@ class MainWindow(QMainWindow):
         openhtmlfile = QAction('Open &HTML File', self)
         openhtmlfile.setShortcut('Ctrl+O')
         openhtmlfile.triggered.connect(self.openhtmlfile)
+
+        # Open PDF file
+        openpdffile = QAction('Open &PDF File', self)
+        openpdffile.setShortcut('Ctrl+Shift+O')
+        openpdffile.triggered.connect(self.openpdffile)
 
         # New Window
         newwinAction = QAction('&New Window', self)
@@ -249,6 +256,7 @@ class MainWindow(QMainWindow):
         menubar.setContextMenuPolicy(Qt.ContextMenuPolicy.PreventContextMenu)
         fileMenu = menubar.addMenu('&File')
         fileMenu.addAction(openhtmlfile)
+        fileMenu.addAction(openpdffile)
         fileMenu.addAction(newwinAction)
         fileMenu.addAction(exitAction)
 
@@ -297,6 +305,18 @@ class MainWindow(QMainWindow):
                 None, "Open File", "C:\\", "HTML Files (*.htm, *.html)")
         filepath2str = str(filepath)
         filepath2str = filepath2str[2:-32]
+        if not filepath2str == "":
+            self.newtab(qurl=QUrl(f"file:{filepath2str}"))
+
+    def openpdffile(self):
+        if platform.system() == "Linux" or platform.system() == "Darwin":
+            filepath = QFileDialog.getOpenFileName(
+                None, "Open File", "/", "PDF Files (*.pdf)")
+        else:
+            filepath = QFileDialog.getOpenFileName(
+                None, "Open File", "C:\\", "PDF Files (*.pdf)")
+        filepath2str = str(filepath)
+        filepath2str = filepath2str[2:-23]
         if not filepath2str == "":
             self.newtab(qurl=QUrl(f"file:{filepath2str}"))
 
@@ -385,30 +405,11 @@ class MainWindow(QMainWindow):
         )
 
         # Keyboard Shortcuts
-        self.fullscreen = QShortcut(QKeySequence("F11"), self)
-        self.fullscreen.activated.connect(self.handle_f11_pressed)
-        browser.page().profile().setHttpUserAgent(f'WebX/{version}')
+        browser.page().profile().setHttpUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36')
         browser.settings().setAttribute(QWebEngineSettings.WebAttribute.FullScreenSupportEnabled, True)
         browser.settings().setAttribute(QWebEngineSettings.WebAttribute.PlaybackRequiresUserGesture, True)
-
-    def handle_f11_pressed(self):
-        if self.isMaximized():
-            maximize = True
-        else:
-            maximize = False
-        if self.tabs.tabBar().isHidden():
-            if maximize:
-                self.showMaximized()
-            else:
-                self.showNormal()
-                menubar.show()
-                navbar.show()
-                self.tabs.tabBar().show()
-        else:
-            self.showFullScreen()
-            menubar.hide()
-            navbar.hide()
-            self.tabs.tabBar().hide()
+        browser.settings().setAttribute(QWebEngineSettings.WebAttribute.PluginsEnabled, True)
+        browser.settings().setAttribute(QWebEngineSettings.WebAttribute.PdfViewerEnabled, True)
 
     def handle_fullscreen_requested(self, request, browser):
         request.accept()
@@ -699,8 +700,9 @@ elif len(args) == 0:
     os.environ[
         "QTWEBENGINE_CHROMIUM_FLAGS"] = "--enable-logging --log-level=3 --ignore-certificate-errors --ignore-ssl-errors"
     app = QApplication([])
-    QApplication.setApplicationName('WebX')
+    QApplication.setApplicationName("WebX")
     window = MainWindow()
+    setproctitle.setproctitle("WebX")
     app.exec()
 else:
     print("Thank you for using the WebX!")
