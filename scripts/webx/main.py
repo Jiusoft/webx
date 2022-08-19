@@ -13,7 +13,6 @@ from download import download_file
 from datetime import datetime
 from history import compile_sqlte3_to_html_history
 from bookmark import compile_sqlte3_to_html_bookmark
-import setproctitle
 
 windows = platform.system() == "Windows"
 linux = platform.system() == "Linux"
@@ -702,7 +701,6 @@ elif len(args) == 0:
     app = QApplication([])
     QApplication.setApplicationName("WebX")
     window = MainWindow()
-    setproctitle.setproctitle("WebX")
     app.exec()
 else:
     print("Thank you for using the WebX!")
