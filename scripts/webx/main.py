@@ -698,8 +698,8 @@ elif len(args) == 0:
         os.environ["QT_QPA_PLATFORM"] = "xcb"
     os.environ[
         "QTWEBENGINE_CHROMIUM_FLAGS"] = "--enable-logging --log-level=3 --ignore-certificate-errors --ignore-ssl-errors"
-    app = QApplication([])
-    QApplication.setApplicationName("WebX")
+    app = QApplication(sys.argv)
+    app.setApplicationName("WebX")
     window = MainWindow()
     app.exec()
 else:
@@ -708,8 +708,8 @@ else:
         os.environ["QT_QPA_PLATFORM"] = "xcb"
     os.environ[
         "QTWEBENGINE_CHROMIUM_FLAGS"] = "--enable-logging --log-level=3 --ignore-certificate-errors --ignore-ssl-errors"
-    app = QApplication([])
-    QApplication.setApplicationName('WebX')
+    app = QApplication(sys.argv)
+    app.setApplicationName('WebX')
     tmp = QUrl(args[0])
     if tmp.scheme() == "":
         tmp.setScheme("https")
